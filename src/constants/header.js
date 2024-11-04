@@ -8,15 +8,12 @@ const versionLength = 1;
 const sequence = 4; // 패킷 번호
 const payloadLength = 4;
 
-const totalLength = packetType + versionLength + sequence + payloadLength;
-
 // 위쪽에 패킷들에 대한 정보를 저장해둔 것
 const PacketFields = {
   PACKET_TYPE_LENGTH: 2,
   VERSION_LENGTH: 1,
-  SEQUENCE_LENGTH: 4,
+  SEQUENCE_LENGTH: 4, // 패킷 호출 수
   PAYLOAD_LENGTH: 4,
-  TOTAL_LENGTH: totalLength,
 };
 
 const PacketType = {

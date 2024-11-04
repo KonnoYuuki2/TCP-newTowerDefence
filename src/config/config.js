@@ -11,8 +11,8 @@ const Config = {
     HOST: envFiles.Server.HOST,
   },
   PACKETS: {
-    TOTAL_LENGTH: PacketFields.TOTAL_LENGTH,
     PACKET_TYPE_LENGTH: PacketFields.PACKET_TYPE_LENGTH,
+    VERSION_LENGTH: PacketFields.VERSION_LENGTH,
     SEQUENCE_LENGTH: PacketFields.SEQUENCE_LENGTH,
     PAYLOAD_LENGTH: PacketFields.PAYLOAD_LENGTH,
   },
