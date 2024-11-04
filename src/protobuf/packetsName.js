@@ -36,6 +36,9 @@ const packetNames = {
     //   "packets.S2CEnemyMonsterDeathNotification",
     GamePacket: "packets.GamePacket",
   },
+  response: {
+    S2CResponse: "response.S2CResponse",
+  },
 };
 
 export default packetNames;

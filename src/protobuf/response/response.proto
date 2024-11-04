@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package response;
+
+message S2CResponse {
+    uint32 packetType = 1;
+    uint32 failCode = 2;
+    string version = 3;
+    uint32 sequence = 4;
+    bytes payload = 5;
+}
