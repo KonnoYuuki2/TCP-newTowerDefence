@@ -1,4 +1,5 @@
 import Config from '../config/config.js';
+import { getPacketType } from '../handlers/index.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
@@ -34,7 +35,9 @@ const onData = (socket) => async (data) => {
       try {
         switch (packetType) {
           default:
-            const { handleID, userId, payload } = packetParser(packet);
+            const { packetType, payload } = packetParser(packet);
+            const packetTypes = getPacketType(packetType);
+            await packetTypes({ socket, payload });
           //await handler({ handleID, userId, payload });
         }
         break;
