@@ -2,9 +2,7 @@ import pools from '../../DB/dataBase.js';
 
 export const getTower = async (towerId, user) => {
   // 유저 전체 정보 가져옴
-  const user = await pools.GAME_DATABASE_REDIS.hgetall(user.uuid);
-
-  const userTowers = user.towerData;
+  const userTowers = await pools.GAME_DATABASE_REDIS.hget(user.uuid, 'towerData');
 
   return userTowers.find((userTower) => {
     userTower.towerId === towerId;
@@ -13,9 +11,7 @@ export const getTower = async (towerId, user) => {
 
 export const towerAttackVerifiy = async (towerId, monsterId) => {
   // 유저 전체 정보 가져옴
-  const user = await pools.GAME_DATABASE_REDIS.hgetall(user.uuid);
-
-  const userMonsters = user.monsterData;
+  const userMonsters = await pools.GAME_DATABASE_REDIS.hgetall(user.uuid, 'monsterData');
 
   const monster = await userMonsters.find((userMonster) => {
     userMonster.monsterId === monsterId;
