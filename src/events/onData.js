@@ -1,18 +1,12 @@
 import Config from '../config/config.js';
+import { TOTAL_HEADER_LENGTH } from '../constants/header.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
-  const totalHeaderLength =
-    Config.PACKETS.PACKET_TYPE_LENGTH + // 2
-    Config.PACKETS.VERSION_LENGTH + // 1
-    5 +
-    Config.PACKETS.SEQUENCE_LENGTH + // 4
-    Config.PACKETS.PAYLOAD_LENGTH;
-
-  while (socket.buffer.length >= totalHeaderLength) {
+  while (socket.buffer.length >= TOTAL_HEADER_LENGTH) {
     let offset = 0;
 
     const packetType = socket.buffer.readUInt16BE(offset); //2바이트
