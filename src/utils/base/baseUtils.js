@@ -1,7 +1,7 @@
 import pools from '../../DB/dataBase.js';
 
 export const getBaseHp = async (user) => {
-  const user = await pools.GAME_DATABASE_REDIS.hget(`user: ${user.id}`);
+  const user = await pools.GAME_DATABASE_REDIS.hgetall(user.uuid);
 
   return user.baseHp;
 };
@@ -16,5 +16,5 @@ export const monsterAttackBaseHpVerify = async (damage, user) => {
   baseHp -= damage;
 
   // 유저 정보 업데이트 해주기
-  await pools.GAME_DATABASE_REDIS.hset(...user, baseHp);
+  await pools.GAME_DATABASE_REDIS.hset(user.uuid, 'baseHp', baseHp);
 };
