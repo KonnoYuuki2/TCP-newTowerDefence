@@ -1,6 +1,6 @@
 import { monsterAttackBaseHpVerify } from '../../utils/base/baseUtils.js';
 
-const monsterAttackBaseHandler = async (socket, payload) => {
+export const monsterAttackBaseHandler = async (socket, payload) => {
   try {
     const { damage } = payload;
 
