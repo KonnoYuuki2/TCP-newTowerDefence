@@ -1,12 +1,12 @@
-import fs from "fs";
-import { fileURLToPath } from "url";
-import path from "path";
-import protobuf from "protobufjs";
-import packetNames from "../protobuf/packetsName.js";
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import protobuf from 'protobufjs';
+import packetNames from '../protobuf/packetsName.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
-const protoFolder = path.join(dirname, "../protobuf");
+const protoFolder = path.join(dirname, '../protobuf');
 
 const getAllProtoFiles = (protoFolder, fileList = []) => {
   const files = fs.readdirSync(protoFolder);
@@ -18,7 +18,7 @@ const getAllProtoFiles = (protoFolder, fileList = []) => {
     // 해당하는 파일이 디렉터리인지를 확인해야겟지?
     if (fs.statSync(filePath).isDirectory()) {
       getAllProtoFiles(filePath, fileList);
-    } else if (path.extname(file) === ".proto") {
+    } else if (path.extname(file) === '.proto') {
       fileList.push(filePath);
     }
   });
@@ -36,7 +36,7 @@ export const loadProtos = async () => {
     await Promise.all(
       protoFiles.map((file) => {
         return root.load(file);
-      })
+      }),
     );
 
     for (let [packageName, types] of Object.entries(packetNames)) {
@@ -59,3 +59,10 @@ export const loadProtos = async () => {
     console.error(`프로토 로딩중 에러 발생`, error);
   }
 };
+
+export const getProtoMessages = () => {
+  //console.log(protoMessages.packets.C2SRegisterRequest); // C2SRegisterRequest에 접근
+
+  return { ...protoMessages };
+};
+//setTimeout(getProtoMessages, 1200);
