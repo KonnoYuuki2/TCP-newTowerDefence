@@ -1,28 +1,14 @@
 import Config from '../config/config.js';
-import { TOTAL_HEADER_LENGTH } from '../constants/header.js';
 import { packetParser } from '../utils/parser/packetParser.js';
+import { serialize } from '../utils/serializer/serialize.js';
 
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
-  while (socket.buffer.length >= TOTAL_HEADER_LENGTH) {
-    let offset = 0;
-
-    const packetType = socket.buffer.readUInt16BE(offset); //2바이트
-    offset += Config.PACKETS.PACKET_TYPE_LENGTH;
-
-    const versionLength = socket.buffer.readUInt8(offset); //1바이트
-    offset += +Config.PACKETS.VERSION_LENGTH;
-
-    const version = socket.buffer.subarray(offset, offset + versionLength).toString('utf-8'); // 크기 가변적 '1.0.0'=5
-    offset += versionLength;
-
-    const sequence = socket.buffer.readUInt32BE(offset); //4바이트
-    offset += Config.PACKETS.SEQUENCE_LENGTH;
-
-    const payloadLength = socket.buffer.readUInt32BE(offset); //4바이트
-    offset += Config.PACKETS.PAYLOAD_LENGTH;
+  while (socket.buffer.length >= Config.PACKETS.TOTAL_HEADER_LENGTH) {
+    // 직렬화된 데이터들
+    const serializeData = await serialize(socket);
 
     if (version !== Config.CLIENT.VERSION) {
       throw new Error(`버전이 일치하지 않습니다.`);
@@ -32,10 +18,10 @@ const onData = (socket) => async (data) => {
     //패킷의 순서 보장 싱글 스레드에서는 잘 일어나지 않으나 패킷이 1,3,2 순서로 올 경우 맞게 처리하는 용도
     //console.log(sequence);
 
-    const requiredLength = offset + payloadLength;
+    const requiredLength = serializeData.offset + serializeData.payloadLength;
 
     if (socket.buffer.length >= requiredLength) {
-      const packet = socket.buffer.subarray(offset, requiredLength);
+      const packet = socket.buffer.subarray(serializeData.offset, requiredLength);
       socket.buffer = socket.buffer.subarray(requiredLength);
 
       // 0x0a (줄바꿈) , 0x0d (캐리지 리턴) 붙어서 +2 되어있음
