@@ -1,23 +1,7 @@
-import { getProtoTypeNameByPacketType } from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import CustomError from '../error/customError.js';
 
-export const packetParser = (data) => {
-  const protoMessages = getProtoMessages();
-
-  const response = protoMessages.common.commonPacket;
-
-  let packet;
-
-  try {
-    packet = response.decode(data);
-  } catch {
-    console.error(e);
-  }
-
-  const packetType = packet.packetType;
-  const version = packet.version;
-  const sequence = packet.sequence;
-
+export const packetParser = (packet) => {
   // version 검증
   if (version !== config.ClIENT.VERSION) {
     throw new CustomError(
@@ -26,16 +10,18 @@ export const packetParser = (data) => {
     );
   }
 
-  const { namespace, typeName } = getProtoTypeNameByPacketType(packetType);
-  const payloadType = protoMessages[namespace][typeName];
+  const protoMessages = getProtoMessages();
+  const message = protoMessages.packets.GamePacket;
 
-  let payload;
-
+  let decodedPacket;
   try {
-    payload = payloadType.decode(packet.payload);
-  } catch (error) {
-    throw new CustomError(ErrorCodes.PACKET_STRUCTURE_MISMATCH, '패킷 구조가 일치하지 않습니다.');
+    console.log('디코딩전');
+    decodedPacket = message.decode(packet);
+    console.log(decodedPacket);
+  } catch (e) {
+    console.error(e);
   }
+  console.log('캣치 후');
 
   // 필드가 비어 있거나, 필수 필드가 누락된 경우 처리
   const expectedFields = Object.keys(payloadType.fields);
@@ -48,5 +34,5 @@ export const packetParser = (data) => {
     );
   }
 
-  return { packetType, payload };
+  return decodedPacket;
 };
