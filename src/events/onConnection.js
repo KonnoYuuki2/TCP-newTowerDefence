@@ -4,9 +4,7 @@ import onError from "./onError.js";
 
 const onConnection = (socket) => (data) => {
   try {
-    console.log(
-      `client is Connected with ${socket.remoteAddress}:${socket.remotePort}`
-    );
+    console.log(`client is Connected with ${socket.remoteAddress}:${socket.remotePort}`);
 
     socket.buffer = Buffer.alloc(0);
 
@@ -16,7 +14,7 @@ const onConnection = (socket) => (data) => {
 
     socket.on("error", onError(socket));
   } catch (error) {
-    console.error(`커넥션 중 에러 발생`);
+    console.error(`커넥션 중 에러 발생2`);
   }
 };
 
