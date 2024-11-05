@@ -1,5 +1,5 @@
 import envFiles from '../constants/env.js';
-import { PacketFields } from '../constants/header.js';
+import { PacketFields, TOTAL_HEADER_LENGTH } from '../constants/header.js';
 
 // 여러개의 변수를 import하는 것이 아닌 하나의 객체로써 import 함으로써 import 수를 줄임
 const Config = {
@@ -15,6 +15,7 @@ const Config = {
     VERSION_LENGTH: PacketFields.VERSION_LENGTH,
     SEQUENCE_LENGTH: PacketFields.SEQUENCE_LENGTH,
     PAYLOAD_LENGTH: PacketFields.PAYLOAD_LENGTH,
+    TOTAL_HEADER_LENGTH: TOTAL_HEADER_LENGTH,
   },
   DATA_BASE: {
     USER_DATABASE_SQL: {
