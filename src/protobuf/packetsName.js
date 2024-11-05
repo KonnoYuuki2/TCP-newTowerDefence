@@ -1,4 +1,7 @@
 const packetNames = {
+  common: {
+    CommonPacket: 'common.CommonPacket',
+  },
   failCode: {
     GlobalFailCode: 'failCode.GlobalFailCode',
   },
