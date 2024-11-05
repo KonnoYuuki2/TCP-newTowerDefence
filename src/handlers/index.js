@@ -1,6 +1,7 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { towerAttackHandler } from './towers/towerAttack.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -56,7 +57,7 @@ const packetTypes = {
     protoType: 'S2CSpawnEnemyMonsterNotification',
   },
   [HANDLER_IDS.TOWER_ATTACK_REQUEST]: {
-    packetType: undefined,
+    packetType: towerAttackHandler,
     protoType: 'C2STowerAttackRequest',
   },
   [HANDLER_IDS.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
