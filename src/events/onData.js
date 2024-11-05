@@ -1,7 +1,6 @@
 import Config from '../config/config.js';
-import { getPacketType } from '../handlers/index.js';
-import { getProtoMessages } from '../init/loadProtos.js';
 import { packetParser } from '../utils/parser/packetParser.js';
+
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -26,15 +25,14 @@ const onData = (socket) => async (data) => {
     offset += versionLength;
 
     const sequence = socket.buffer.readUInt32BE(offset); //4바이트
-
     offset += Config.PACKETS.SEQUENCE_LENGTH;
 
     const payloadLength = socket.buffer.readUInt32BE(offset); //4바이트
-    if (version !== Config.ClIENT.VERSION) {
+    offset += Config.PACKETS.PAYLOAD_LENGTH;
+
+    if (version !== Config.CLIENT.VERSION) {
       throw new Error(`버전이 일치하지 않습니다.`);
     }
-
-    offset += Config.PACKETS.PAYLOAD_LENGTH;
 
     //if(sequence !== ) => 패킷 호출이 지금과 같지 않다면 에러 발생 처리
     //패킷의 순서 보장 싱글 스레드에서는 잘 일어나지 않으나 패킷이 1,3,2 순서로 올 경우 맞게 처리하는 용도
@@ -51,9 +49,8 @@ const onData = (socket) => async (data) => {
       try {
         const payload = packetParser(packet);
 
-        console.log(packetType, payload);
-        const packetTypes = getPacketType(packetType);
-        await packetTypes({ socket, payload });
+        // const packetTypes = getPacketType(packetType);
+        // await packetTypes({ socket, payload });
       } catch (error) {
         throw new Error(`패킷 변환중 에러 발생`, error);
       }

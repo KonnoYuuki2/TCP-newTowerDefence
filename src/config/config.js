@@ -3,7 +3,7 @@ import { PacketFields } from '../constants/header.js';
 
 // 여러개의 변수를 import하는 것이 아닌 하나의 객체로써 import 함으로써 import 수를 줄임
 const Config = {
-  ClIENT: {
+  CLIENT: {
     VERSION: envFiles.Client.VERSION,
   },
   SERVER: {
