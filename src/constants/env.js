@@ -19,7 +19,7 @@ const envFiles = {
   },
   GamePlay_DB: {
     DB_NAME: process.env.DB2_NAME,
-    DB_PASSWORD: process.env.DB2_SERVER_PASSWORD,
+    DB_PASSWORD: process.env.DB2_PASSWORD,
     DB_PORT: process.env.DB2_SERVER_PORT,
     DB_HOST: process.env.DB2_SERVER_HOST,
     DB_NUMBER: process.env.DB2_NUMBER,
