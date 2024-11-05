@@ -10,7 +10,7 @@ const onData = (socket) => async (data) => {
     // 직렬화된 데이터들
     const serializeData = await serialize(socket);
 
-    if (version !== Config.CLIENT.VERSION) {
+    if (serializeData.version !== Config.CLIENT.VERSION) {
       throw new Error(`버전이 일치하지 않습니다.`);
     }
 
