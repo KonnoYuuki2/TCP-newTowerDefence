@@ -1,90 +1,90 @@
-import { HANDLER_IDS } from '../constants/handlerIds.js';
+import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
-    packetType: RegisterRequestHandler,
+    packetType: undefined,
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.REGISTER_RESPONSE]: {
-    packetType: RegisterResponseHandler,
+    packetType: undefined,
     protoType: 'S2CRegisterResponse',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: loginRequestHandler,
+    packetType: undefined,
     protoType: 'C2SLoginRequest',
   },
   [HANDLER_IDS.LOGIN_RESPONSE]: {
-    packetType: loginResponseHandler,
+    packetType: undefined,
     protoType: 'S2CLoginResponse',
   },
   [HANDLER_IDS.MATCH_REQUEST]: {
-    packetType: matchRequestHandler,
+    packetType: undefined,
     protoType: 'C2SMatchRequest',
   },
   [HANDLER_IDS.MATCH_START_NOTIFICATION]: {
-    packetType: matchStartNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CMatchStartNotification',
   },
   [HANDLER_IDS.STATE_SYNC_NOTIFICATION]: {
-    packetType: stateSyncNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CStateSyncNotification',
   },
   [HANDLER_IDS.TOWER_PURCHASE_REQUEST]: {
-    packetType: towerPurchaseRequestHandler,
+    packetType: undefined,
     protoType: 'C2STowerPurchaseRequest',
   },
   [HANDLER_IDS.TOWER_PURCHASE_RESPONSE]: {
-    packetType: towerPurchaseResponseHandler,
+    packetType: undefined,
     protoType: 'S2CTowerPurchaseResponse',
   },
   [HANDLER_IDS.ADD_ENEMY_TOWER_NOTIFICATION]: {
-    packetType: addEnemyTowerNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CAddEnemyTowerNotification',
   },
   [HANDLER_IDS.SPAWN_MONSTER_REQUEST]: {
-    packetType: spawnMonsterRequestHandler,
+    packetType: undefined,
     protoType: 'C2SSpawnMonsterRequest',
   },
   [HANDLER_IDS.SPAWN_MONSTER_RESPONSE]: {
-    packetType: spawnMonsterResponseHandler,
+    packetType: undefined,
     protoType: 'S2CSpawnMonsterResponse',
   },
   [HANDLER_IDS.SPAWN_ENEMY_MONSTER_NOTIFICATION]: {
-    packetType: spawnEnemyMonsterNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CSpawnEnemyMonsterNotification',
   },
   [HANDLER_IDS.TOWER_ATTACK_REQUEST]: {
-    packetType: towerAttackRequestHandler,
+    packetType: undefined,
     protoType: 'C2STowerAttackRequest',
   },
   [HANDLER_IDS.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
-    packetType: enemyTowerAttackNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CEnemyTowerAttackNotification',
   },
   [HANDLER_IDS.MONSTER_ATTACK_BASE_REQUEST]: {
-    packetType: monsterAttackBaseRequestHandler,
+    packetType: undefined,
     protoType: 'C2SMonsterAttackBaseRequest',
   },
   [HANDLER_IDS.UPDATE_BASE_HP_NOTIFICATION]: {
-    packetType: updateBaseHpNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CUpdateBaseHPNotification',
   },
   [HANDLER_IDS.GAME_OVER_NOTIFICATION]: {
-    packetType: gameOverNotificationHandler,
+    packetType: undefined,
     protoType: 'S2CGameOverNotification',
   },
   [HANDLER_IDS.GAME_END_REQUEST]: {
-    packetType: gameEndRequestHandler,
+    packetType: undefined,
     protoType: 'C2SGameEndRequest',
   },
   [HANDLER_IDS.MONSTER_DEATH_NOTIFICATION]: {
-    packetType: monsterDeathNotificationHandler,
+    packetType: undefined,
     protoType: 'C2SMonsterDeathNotification',
   },
   [HANDLER_IDS.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
-    packetType: enemyMonsterDeathNotification,
+    packetType: undefined,
     protoType: 'S2CEnemyMonsterDeathNotification',
   },
 };
