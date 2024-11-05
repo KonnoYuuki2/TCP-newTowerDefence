@@ -5,7 +5,7 @@ export const towerAttackHandler = (socket, payload) => {
   try {
     // 1.현재 유저 정보 불러오기
     // 임시적임 함수 명임
-    const user = getAccountBySocket(socket);
+    const user = getUserBySocket(socket);
 
     const { towerId, monsterId } = payload;
 
@@ -13,7 +13,7 @@ export const towerAttackHandler = (socket, payload) => {
     towerAttackVerifiy(towerId, monsterId, user);
 
     // 적 유저 정보 가져옴
-    const EnemeyUser = getEnemyAccountBySocket(socket);
+    const EnemeyUser = getEnemyUserBySocket(socket);
 
     // S2CEnemyTowerAttackNotification - Utils에 기능 개발 필요
     EnemeyUser.socket.write(createS2CEnemyTowerAttackNotification(towerId, monsterId));
