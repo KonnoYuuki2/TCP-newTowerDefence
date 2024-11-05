@@ -1,3 +1,5 @@
+import { redis } from '../utils/redis/redis.js';
+
 const testDbConnection = async (pool, dbName, dbType) => {
   try {
     //sql
@@ -13,9 +15,41 @@ const testDbConnection = async (pool, dbName, dbType) => {
   }
 };
 
+const testRedis = async () => {
+  const userData = {
+    userGold: 1000,
+    baseHp: 100,
+    towerData: [{ towerId: 1, x: 1, y: 1 }],
+    monsterData: [],
+    level: 1,
+    score: 0,
+  };
+
+  await redis.setUserData(1, userData);
+
+  const user1 = {
+    socket: {
+      id: 123,
+    },
+    id: 12,
+  };
+  const user2 = {
+    socket: {
+      id: 234,
+    },
+    id: 23,
+  };
+
+  await redis.addUser(1, user1);
+  await redis.addUser(1, user2);
+  const data = await redis.getUser(1, 23);
+  console.log('redis: getUser', data);
+};
+
 const testAllConnections = async (pools) => {
   await testDbConnection(pools.USER_DATABASE_SQL, 'USER_DB', 'sql');
   await testDbConnection(pools.GAME_DATABASE_REDIS, 'GAME_DB', 'redis');
+  await testRedis();
 };
 
 export { testDbConnection, testAllConnections };
