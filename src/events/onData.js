@@ -1,5 +1,4 @@
 import Config from '../config/config.js';
-import { TOTAL_HEADER_LENGTH } from '../constants/header.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { serialize } from '../utils/serializer/serialize.js';
 
@@ -7,7 +6,7 @@ const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
-  while (socket.buffer.length >= TOTAL_HEADER_LENGTH) {
+  while (socket.buffer.length >= Config.PACKETS.TOTAL_HEADER_LENGTH) {
     // 직렬화된 데이터들
     const serializeData = await serialize(socket);
 
