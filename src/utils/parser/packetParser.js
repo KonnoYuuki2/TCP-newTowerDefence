@@ -7,13 +7,8 @@ export const packetParser = (data) => {
 
   let packet;
 
-  console.log(data);
   try {
     packet = response.decode(data);
-
-    console.log(packet.id);
-    console.log(packet.password);
-    console.log(packet.email);
   } catch {
     console.error(e);
   }

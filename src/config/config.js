@@ -27,6 +27,7 @@ const Config = {
     GAME_DATABASE_REDIS: {
       HOST: envFiles.GamePlay_DB.DB_HOST,
       PASSWORD: envFiles.GamePlay_DB.DB_PASSWORD,
+      NAME: envFiles.GamePlay_DB.DB_NAME,
       NUMBER: envFiles.GamePlay_DB.DB_NUMBER,
       PORT: envFiles.GamePlay_DB.DB_PORT,
     },

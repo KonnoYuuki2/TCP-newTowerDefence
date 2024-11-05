@@ -24,13 +24,13 @@ const onData = (socket) => async (data) => {
     //if(sequence !== ) => 패킷 호출이 지금과 같지 않다면 에러 발생 처리
     //패킷의 순서 보장 싱글 스레드에서는 잘 일어나지 않으나 패킷이 1,3,2 순서로 올 경우 맞게 처리하는 용도
     //console.log(sequence);
+
     const new_TotalHeaderLength =
       totalHeaderLength + version.length + Config.PACKETS.PAYLOAD_LENGTH;
-
-    console.log(totalHeaderLength, new_TotalHeaderLength);
     if (socket.buffer.length >= new_TotalHeaderLength + payload_Length) {
       const packet = socket.buffer.subarray(new_TotalHeaderLength + 2);
       // 0x0a (줄바꿈) , 0x0d (캐리지 리턴) 붙어서 +2 되어있음
+      // 실제 페이로드는 헤더 + \n, \0 을 제외한 길이
       try {
         switch (packetType) {
           default:
