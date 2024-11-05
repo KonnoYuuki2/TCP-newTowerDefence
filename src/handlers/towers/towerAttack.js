@@ -1,3 +1,4 @@
+import { createS2CEnemyTowerAttackNotification } from '../../utils/towers/notification/towerNotification.js';
 import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
 export const towerAttackHandler = (socket, payload) => {
@@ -15,7 +16,7 @@ export const towerAttackHandler = (socket, payload) => {
     const EnemeyUser = getEnemyAccountBySocket(socket);
 
     // S2CEnemyTowerAttackNotification - Utils에 기능 개발 필요
-    EnemeyUser.socket.write(S2CEnemyTowerAttackNotification(towerId, monsterId));
+    EnemeyUser.socket.write(createS2CEnemyTowerAttackNotification(towerId, monsterId));
   } catch (error) {
     throw new Error(`타워 공격 정보 처리중 에러 발생`, error);
   }
