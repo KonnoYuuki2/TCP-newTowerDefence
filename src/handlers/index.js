@@ -1,6 +1,7 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { towerAttackHandler } from './towers/towerAttack.js';
 import { matchRequestHandler } from './match/matchHandler.js';
 
 const packetTypes = {
