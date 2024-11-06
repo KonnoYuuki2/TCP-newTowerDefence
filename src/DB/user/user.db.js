@@ -18,12 +18,15 @@ export const createUser = async (account_id, password, email) => {
   const newPassword = await bcrypt.hash(password, saltRounds);
 
   const isUserRegistered = await findUser(account_id);
-  console.log(isUserRegistered);
   if (isUserRegistered == null) return Error('유저가 이미 존재함');
 
-  await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_USER, [account_id, uuid, password, email]);
-
-  return { account_id, uuid, password, email };
+  await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_USER, [
+    account_id,
+    uuid,
+    newPassword,
+    email,
+  ]);
+  return { account_id, uuid, newPassword, email };
 };
 
 // export const updateUserLogin = async (id) => {

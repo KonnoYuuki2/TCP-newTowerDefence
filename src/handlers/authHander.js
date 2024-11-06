@@ -1,22 +1,19 @@
 import { createUser, findUser } from '../DB/user/user.db.js';
-import { getProtoMessages } from '../init/loadProtos.js';
 import { createResponse } from '../utils/response/createResponse.js';
 import { PacketType } from '../constants/header.js';
 import bcrypt from 'bcrypt';
-const SALTROUNDS = 10;
 class AuthHandler {
   constructor() {
     Object.freeze(this);
   }
-  createUser = async (socket, payload) => {
+  createUser = async ({ socket, payload }) => {
     //console.dir(payload, { depth: null });
     const fieldName = Object.keys(payload)[0];
     if (fieldName === 'registerRequest') {
       const { id, password, email } = payload[fieldName];
 
       //이메일 형식 검사 필요
-      const newPassword = await bcrypt.hash(password, SALTROUNDS);
-      await createUser(id, newPassword, email);
+      await createUser(id, password, email);
 
       const S2CRegisterResponse = {
         success: true,
@@ -27,12 +24,12 @@ class AuthHandler {
         registerResponse: S2CRegisterResponse,
       };
       const result = createResponse(PacketType.REGISTER_RESPONSE, 0, gamePacket);
-      console.log(result);
+      console.log('Serialized response:', result);
       socket.write(result);
     }
   };
 
-  Login = async (socket, payload) => {
+  Login = async ({ socket, payload }) => {
     console.dir(payload, { depth: null });
     const fieldName = Object.keys(payload)[0];
     if (fieldName === 'loginRequest') {
