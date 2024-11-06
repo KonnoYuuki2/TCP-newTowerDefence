@@ -22,7 +22,7 @@ export const deserialize = async (socket) => {
   return { packetType, version, sequence, payloadLength, offset };
 };
 
-export const serialize = async (packetType, version, sequence, payload) => {
+export const serialize = (packetType, version, sequence, payload) => {
   const versionBuffer = Buffer.from(version, 'utf-8'); // 버전 문자열을 버퍼로 변환
   const versionLength = versionBuffer.length;
   const payloadLength = payload.length;
