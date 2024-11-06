@@ -1,107 +1,61 @@
 import { createUser, findUser } from '../DB/user/user.db.js';
-import { getProtoMessages } from '../init/loadProtos.js';
-import Config from '../config/config.js';
-import { handler } from './index.js';
-import { buffer } from 'protocol-buffers/compile.js';
-
+import { createResponse } from '../utils/response/createResponse.js';
+import { PacketType } from '../constants/header.js';
+import bcrypt from 'bcrypt';
 class AuthHandler {
   constructor() {
     Object.freeze(this);
   }
-  createUser = async (payload) => {
+  createUser = async ({ socket, payload }) => {
     //console.dir(payload, { depth: null });
     const fieldName = Object.keys(payload)[0];
     if (fieldName === 'registerRequest') {
       const { id, password, email } = payload[fieldName];
-      await createUser(id, password, email);
-      // 대충 데이터베이스 에러
-      //이메일 형식 검사
 
-      //여기부터 리스폰
-      const protoMessages = getProtoMessages();
-      const message = protoMessages.packets.GamePacket;
+      //이메일 형식 검사 필요
+      await createUser(id, password, email);
+
       const S2CRegisterResponse = {
-        //타입에 맞게
         success: true,
         message: 'Test',
         GlobalFailCode: 'NONE',
       };
-      const GamePacket = {
+      const gamePacket = {
         registerResponse: S2CRegisterResponse,
       };
-      const data = message.encode(GamePacket).finish();
-      const header = headerAdd(2, 0, data.length);
-      const result = Buffer.concat([header, data]);
-      console.log(result);
-      return result;
-    } else {
-      // 패킷타입 틀림
+      const result = createResponse(PacketType.REGISTER_RESPONSE, 0, gamePacket);
+      console.log('Serialized response:', result);
+      socket.write(result);
     }
   };
 
-  Login = async (payload) => {
+  Login = async ({ socket, payload }) => {
     console.dir(payload, { depth: null });
     const fieldName = Object.keys(payload)[0];
     if (fieldName === 'loginRequest') {
       const { id, password } = payload[fieldName];
-      const { sqlId, sqlPassword } = await findUser(id);
-      // 없을 경우 에러코드
+      const sqlUserData = await findUser(id);
 
-      // 비교 -> 틀리면 에러코드
-
-      const protoMessages = getProtoMessages();
-      const message = protoMessages.packets.GamePacket;
+      const isMatch = await bcrypt.compare(password, sqlUserData[0].password);
+      console.log(isMatch);
+      // 없을 때 처리도 필요함
+      // 일단 무조건 성공
+      // JWT 추가해야됨
       const S2CLoginResponse = {
-        //타입에 맞게
-        success: true,
+        success: isMatch,
         message: null,
         token: null,
         failCode: 'NONE',
       };
-      const GamePacket = {
+      const gamePacket = {
         loginResponse: S2CLoginResponse,
       };
-      const data = message.encode(GamePacket).finish();
-      const header = headerAdd(4, 0, data.length);
-      const result = Buffer.concat([header, data]);
+      const result = createResponse(PacketType.LOGIN_RESPONSE, 0, gamePacket);
       console.log(result);
-      return result;
+      socket.write(result);
     }
   };
 }
-const headerAdd = (packetType, sequence, payloadLength) => {
-  const headerLength1 =
-    Config.PACKETS.PACKET_TYPE_LENGTH + // 2
-    Config.PACKETS.VERSION_LENGTH; // 1
-
-  const headerLength2 =
-    Config.PACKETS.SEQUENCE_LENGTH + // 4
-    Config.PACKETS.PAYLOAD_LENGTH; // 4
-
-  let offset1 = 0;
-  let offset2 = 0;
-  let header1 = Buffer.alloc(headerLength1);
-  let header2 = Buffer.alloc(headerLength2);
-
-  header1.writeUInt16BE(packetType, offset1);
-  offset1 += Config.PACKETS.PACKET_TYPE_LENGTH;
-
-  header1.writeUInt8(Config.SERVER.VERSION.length, offset1);
-  offset1 += Config.PACKETS.VERSION_LENGTH;
-
-  const versionBuffer = Buffer.from(Config.SERVER.VERSION);
-  header1 = Buffer.concat([header1, versionBuffer]);
-  offset1 += versionBuffer.length;
-
-  header2.writeUInt32BE(sequence, offset2);
-  offset2 += Config.PACKETS.SEQUENCE_LENGTH;
-
-  header2.writeUInt32BE(payloadLength, offset2);
-  offset2 += Config.PACKETS.PAYLOAD_LENGTH;
-
-  const result_header = Buffer.concat([header1, header2]);
-  return result_header;
-};
 
 const authHandler = new AuthHandler();
 export default authHandler;

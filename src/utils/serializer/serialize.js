@@ -22,11 +22,10 @@ export const deserialize = async (socket) => {
   return { packetType, version, sequence, payloadLength, offset };
 };
 
-export const serialize = (packetType, version, sequence, payload) => {
-  const versionBuffer = Buffer.from(version, 'utf-8'); // 버전 문자열을 버퍼로 변환
+export const serialize = (packetType, sequence, payload) => {
+  const versionBuffer = Buffer.from(Config.SERVER.VERSION, 'utf-8'); // 버전 문자열을 버퍼로 변환
   const versionLength = versionBuffer.length;
   const payloadLength = payload.length;
-
   const buffer = Buffer.alloc(TOTAL_HEADER_LENGTH);
   let offset = 0;
 
@@ -51,8 +50,7 @@ export const serialize = (packetType, version, sequence, payload) => {
   offset += Config.PACKETS.PAYLOAD_LENGTH;
 
   // payload 쓰기 (가변 길이)
-  payload.copy(buffer, offset);
+  const result = Buffer.concat([buffer, payload]);
   offset += payloadLength;
-
-  return buffer;
+  return result;
 };
