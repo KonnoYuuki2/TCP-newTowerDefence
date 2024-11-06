@@ -1,4 +1,4 @@
-import { spawnMonster } from '../../utils/monster/monsterUtils.jjs';
+import { spawnMonster } from '../../utils/monster/monsterUtils.js';
 
 export const spawnMonsterRequest = async (socket) => {
   try {
