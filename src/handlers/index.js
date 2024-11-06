@@ -100,7 +100,7 @@ export const getProtoTypeNameByPacketType = (packetType) => {
   }
   return packetTypes[packetType].protoType;
 };
-export const handler = async (packetType, payload) => {
+export const handler = async (socket, packetType, payload) => {
   if (!packetType) {
     throw new CustomError(
       ErrorCodes.UNKNOWN_HANDLER_ID,
@@ -109,6 +109,5 @@ export const handler = async (packetType, payload) => {
   }
   const handlerFunction = packetTypes[packetType].packetType;
 
-  const reselt = await handlerFunction(payload);
-  return reselt;
+  await handlerFunction(socket, payload);
 };
