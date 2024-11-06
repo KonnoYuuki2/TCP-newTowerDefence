@@ -102,12 +102,18 @@ export const getProtoTypeNameByPacketType = (packetType) => {
 };
 export const handler = async (socket, packetType, payload) => {
   if (!packetType) {
-    throw new CustomError(
-      ErrorCodes.UNKNOWN_HANDLER_ID,
-      `핸들러를 찾을 수 없습니다: ID ${packetType}`,
-    );
+    throw new Error(`핸들러를 찾을 수 없습니다: ID ${packetType}`);
   }
-  const handlerFunction = packetTypes[packetType].packetType;
 
-  await handlerFunction(socket, payload);
+  const handlerFunction = packetTypes[packetType].packetType;
+  if (!handlerFunction) {
+    throw new Error(`패킷 타입 ${packetType}에 대한 핸들러가 없습니다.`);
+  }
+
+  try {
+    await handlerFunction({ socket, payload });
+  } catch (error) {
+    console.error(`핸들러 실행 중 에러 발생:`, error);
+    throw error;
+  }
 };

@@ -1,7 +1,7 @@
 import Config from '../config/config.js';
 import { packetParser } from '../utils/parser/packetParser.js';
-import { serialize, deserialize } from '../utils/serializer/serialize.js';
-import { getProtoTypeNameByPacketType, handler } from '../handlers/index.js';
+import { deserialize } from '../utils/serializer/serialize.js';
+import { handler } from '../handlers/index.js';
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -29,11 +29,7 @@ const onData = (socket) => async (data) => {
 
       try {
         const payload = packetParser(packet);
-        //console.log(payload);
-        // const packetTypes = getPacketType(packetType);
-        // await packetTypes({ socket, payload });
-        //console.log(packetType);
-        //const type = getProtoTypeNameByPacketType(packetType);
+        console.log('payload', payload);
 
         await handler(socket, deserializeData.packetType, payload);
         console.log('탈출');
