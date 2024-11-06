@@ -11,17 +11,17 @@ client.connect(Config.SERVER.PORT, Config.SERVER.HOST, async () => {
 
   await loadProtos();
   const packetType = HANDLER_IDS.TOWER_ATTACK_REQUEST;
-  const version = Config.CLIENT.VERSION;
+  //const version = Config.CLIENT.VERSION;
   const sequence = 0;
-  const payload = { towerId: 1, monsterId: 1 };
+  const payload = { towerAttackRequest: { towerId: 1, monsterId: 1 } };
 
   const protoMessages = getProtoMessages();
-  const enemyTowerAttackProto = protoMessages.packets.GamePacket;
+  const towerAttackProto = protoMessages.packets.GamePacket;
 
-  const message = enemyTowerAttackProto.create(payload);
-  const enemyTowerAttackpacket = enemyTowerAttackProto.encode(message).finish();
+  const message = towerAttackProto.create(payload);
+  const towerAttackpacket = towerAttackProto.encode(message).finish();
 
-  const buffer = serialize(packetType, version, sequence, enemyTowerAttackpacket);
+  const buffer = serialize(packetType, sequence, towerAttackpacket);
 
   client.write(buffer);
 });

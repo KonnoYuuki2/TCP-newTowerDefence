@@ -1,22 +1,27 @@
+import { connectedSockets } from '../../events/onConnection.js';
 import { redis } from '../../utils/redis/redis.js';
 import { createS2CEnemyTowerAttackNotification } from '../../utils/towers/notification/towerNotification.js';
 import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
-export const towerAttackHandler = async (socket, payload) => {
+export const towerAttackHandler = async ({ socket, payload }) => {
   try {
-    const { towerId, monsterId } = payload;
+    const fieldName = Object.keys(payload)[0];
+
+    const { towerId, monsterId } = payload[fieldName];
+    console.log(`야아아아아아악`, towerId, monsterId);
 
     // 타워, 몬스터 유무 검증
     await towerAttackVerifiy(towerId, monsterId);
 
     // 적 유저 정보 가져옴
-    // 여기서 레디스 정보를 가져온다면 밑에 부분 삭제 고려
-    const enemeyUser = await getEnemyUserBySocketId(socket.id);
+    const enemySocket = connectedSockets.forEach((value, key) => {
+      return key !== socket.id;
+    });
 
-    // 적 유저 검증
-    const EnemyUserSocket = await redis.getUser(gameId, enemeyUser.userId).socket;
+    console.log(`너 없지?`, enemySocket);
+    const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
 
-    EnemyUserSocket.write(createS2CEnemyTowerAttackNotification(towerId, monsterId));
+    enemySocket.write(createS2CEnemyTowerAttackNotification(towerAttackPacket));
   } catch (error) {
     throw new Error(`타워 공격 정보 처리중 에러 발생`, error);
   }
