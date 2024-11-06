@@ -1,4 +1,4 @@
-import { createUser } from '../DB/user/user.db.js';
+import { createUser, findUser } from '../DB/user/user.db.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import Config from '../config/config.js';
 import { handler } from './index.js';
@@ -28,7 +28,7 @@ class AuthHandler {
         registerResponse: S2CRegisterResponse,
       };
       const data = message.encode(GamePacket).finish();
-      const header = headerAdd(2, data.length);
+      const header = headerAdd(2, 0, data.length);
       const result = Buffer.concat([header, data]);
       console.log(result);
       return result;
@@ -36,16 +36,45 @@ class AuthHandler {
       // 패킷타입 틀림
     }
   };
-}
 
-const headerAdd = (packetType, payloadLength) => {
+  Login = async (payload) => {
+    console.dir(payload, { depth: null });
+    const fieldName = Object.keys(payload)[0];
+    if (fieldName === 'loginRequest') {
+      const { id, password } = payload[fieldName];
+      const { sqlId, sqlPassword } = await findUser(id);
+      // 없을 경우 에러
+
+      // 비교 -> 틀리면 에러
+
+      const protoMessages = getProtoMessages();
+      const message = protoMessages.packets.GamePacket;
+      const S2CLoginResponse = {
+        //타입에 맞게
+        success: true,
+        message: null,
+        token: null,
+        failCode: 'NONE',
+      };
+      const GamePacket = {
+        loginResponse: S2CLoginResponse,
+      };
+      const data = message.encode(GamePacket).finish();
+      const header = headerAdd(4, 0, data.length);
+      const result = Buffer.concat([header, data]);
+      console.log(result);
+      return result;
+    }
+  };
+}
+const headerAdd = (packetType, sequence, payloadLength) => {
   const headerLength1 =
     Config.PACKETS.PACKET_TYPE_LENGTH + // 2
     Config.PACKETS.VERSION_LENGTH; // 1
 
   const headerLength2 =
     Config.PACKETS.SEQUENCE_LENGTH + // 4
-    Config.PACKETS.PAYLOAD_LENGTH;
+    Config.PACKETS.PAYLOAD_LENGTH; // 4
 
   let offset1 = 0;
   let offset2 = 0;
@@ -62,7 +91,7 @@ const headerAdd = (packetType, payloadLength) => {
   header1 = Buffer.concat([header1, versionBuffer]);
   offset1 += versionBuffer.length;
 
-  header2.writeUInt32BE(Config.PACKETS.SEQUENCE_LENGTH, offset2);
+  header2.writeUInt32BE(sequence, offset2);
   offset2 += Config.PACKETS.SEQUENCE_LENGTH;
 
   header2.writeUInt32BE(payloadLength, offset2);
