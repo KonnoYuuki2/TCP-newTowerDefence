@@ -1,9 +1,12 @@
+import { UserFields } from '../../constants/enum.js';
 import pools from '../../DB/dataBase.js';
+import { redis } from '../redis/redis.js';
 
 export const getBaseHp = async (user) => {
-  const user = await pools.GAME_DATABASE_REDIS.hgetall(user.uuid);
+  // 추후에 get필드가 나오면 업데이트 예정
+  const baseHp = await pools.GAME_DATABASE_REDIS.hget(`user:${user.uuid}`, 'baseHp');
 
-  return user.baseHp;
+  return baseHp;
 };
 
 export const monsterAttackBaseHpVerify = async (damage, user) => {
@@ -16,5 +19,6 @@ export const monsterAttackBaseHpVerify = async (damage, user) => {
   baseHp -= damage;
 
   // 유저 정보 업데이트 해주기
-  await pools.GAME_DATABASE_REDIS.hset(user.uuid, 'baseHp', baseHp);
+  //await pools.GAME_DATABASE_REDIS.hset(`user:${user.uuid}`, 'baseHp', baseHp);
+  await redis.updateUserField(user.uuid, UserFields.BASE_HP, baseHp);
 };
