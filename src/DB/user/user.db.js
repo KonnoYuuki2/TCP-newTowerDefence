@@ -1,23 +1,32 @@
-//import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import pools from '../dataBase.js';
 import { SQL_QUERIES } from './user.queries.js';
-
+import bcrypt from 'bcrypt';
+import CustomError from '../../utils/error/customError.js';
 export const findUser = async (account_id) => {
   const reselt = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_USER_BY_ACCOUNT_ID, [
     account_id,
   ]);
-  console.log(reselt);
+
   return reselt[0];
 };
 
 export const createUser = async (account_id, password, email) => {
-  //const id = uuidv4();
-  // 아이디 uuid
-  // 패스워드 암호화 필요
-  // 중복 처리 필요
-  await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_USER, [account_id, password, email]);
+  const uuid = uuidv4();
 
-  return { account_id, password, email };
+  const saltRounds = 10;
+  const newPassword = await bcrypt.hash(password, saltRounds);
+
+  const isUserRegistered = await findUser(account_id);
+  if (isUserRegistered == null) return Error('유저가 이미 존재함');
+
+  await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_USER, [
+    account_id,
+    uuid,
+    newPassword,
+    email,
+  ]);
+  return { account_id, uuid, newPassword, email };
 };
 
 // export const updateUserLogin = async (id) => {

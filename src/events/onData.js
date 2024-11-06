@@ -1,17 +1,16 @@
 import Config from '../config/config.js';
 import { packetParser } from '../utils/parser/packetParser.js';
-import { deserialize, serialize } from '../utils/serializer/serialize.js';
-
-import { getProtoTypeNameByPacketType, handler } from '../handlers/index.js';
+import { deserialize } from '../utils/serializer/serialize.js';
+import { handler } from '../handlers/index.js';
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
   while (socket.buffer.length >= Config.PACKETS.TOTAL_HEADER_LENGTH) {
     // 직렬화된 데이터들
-    const serializeData = await deserialize(socket);
+    const deserializeData = await deserialize(socket);
 
-    if (serializeData.version !== Config.CLIENT.VERSION) {
+    if (deserializeData.version !== Config.CLIENT.VERSION) {
       throw new Error(`버전이 일치하지 않습니다.`);
     }
 
@@ -19,10 +18,10 @@ const onData = (socket) => async (data) => {
     //패킷의 순서 보장 싱글 스레드에서는 잘 일어나지 않으나 패킷이 1,3,2 순서로 올 경우 맞게 처리하는 용도
     //console.log(sequence);
 
-    const requiredLength = serializeData.offset + serializeData.payloadLength;
+    const requiredLength = deserializeData.offset + deserializeData.payloadLength;
 
     if (socket.buffer.length >= requiredLength) {
-      const packet = socket.buffer.subarray(serializeData.offset, requiredLength);
+      const packet = socket.buffer.subarray(deserializeData.offset, requiredLength);
       socket.buffer = socket.buffer.subarray(requiredLength);
 
       // 0x0a (줄바꿈) , 0x0d (캐리지 리턴) 붙어서 +2 되어있음
@@ -30,13 +29,9 @@ const onData = (socket) => async (data) => {
 
       try {
         const payload = packetParser(packet);
-        //console.log(payload);
-        // const packetTypes = getPacketType(packetType);
-        // await packetTypes({ socket, payload });
-        //console.log(packetType);
-        //const type = getProtoTypeNameByPacketType(packetType);
-        const req = await handler(packetType, payload);
-        socket.write(req);
+        console.log('payload', payload);
+
+        await handler(socket, deserializeData.packetType, payload);
         console.log('탈출');
         break;
       } catch (error) {
