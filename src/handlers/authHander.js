@@ -15,7 +15,9 @@ class AuthHandler {
       const { id, password, email } = payload[fieldName];
       await createUser(id, password, email);
       // 대충 데이터베이스 에러
-      // 리스폰
+      //이메일 형식 검사
+
+      //여기부터 리스폰
       const protoMessages = getProtoMessages();
       const message = protoMessages.packets.GamePacket;
       const S2CRegisterResponse = {
@@ -43,9 +45,9 @@ class AuthHandler {
     if (fieldName === 'loginRequest') {
       const { id, password } = payload[fieldName];
       const { sqlId, sqlPassword } = await findUser(id);
-      // 없을 경우 에러
+      // 없을 경우 에러코드
 
-      // 비교 -> 틀리면 에러
+      // 비교 -> 틀리면 에러코드
 
       const protoMessages = getProtoMessages();
       const message = protoMessages.packets.GamePacket;
