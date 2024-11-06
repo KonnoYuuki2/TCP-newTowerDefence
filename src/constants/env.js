@@ -6,6 +6,7 @@ const envFiles = {
   Server: {
     PORT: process.env.PORT || 5555,
     HOST: process.env.HOST || 'localhost',
+    VERSION: process.env.VERSION || '1.0.0',
   },
   Client: {
     VERSION: process.env.VERSION,
