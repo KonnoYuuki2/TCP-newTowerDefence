@@ -5,6 +5,7 @@ const redisClient = pools.GAME_DATABASE_REDIS;
 // Prefix 상수
 const USER_PREFIX = 'user';
 const GAME_SESSION_PREFIX = 'gameSession';
+const MATCH_PREFIX = 'matchQueue';
 
 export const redis = {
   // 게임 세션에 유저 추가
@@ -105,5 +106,19 @@ export const redis = {
     } catch (error) {
       console.error(`유저 데이터 삭제 중 에러 발생: ${error}`);
     }
+  },
+
+  // 매칭 대기열 관련 메서드
+  addToMatchQueue: async (player) => {
+    await redisClient.rpush(MATCH_PREFIX, JSON.stringify(player));
+  },
+
+  getMatchQueue: async () => {
+    const queue = await redisClient.lrange(MATCH_PREFIX, 0, -1);
+    return queue.map((player) => JSON.parse(player));
+  },
+
+  removeFromMatchQueue: async (count) => {
+    return await redisClient.lpop(MATCH_PREFIX, count);
   },
 };
