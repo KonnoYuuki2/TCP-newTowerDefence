@@ -1,10 +1,11 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { registerHander } from './registerHander.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
-    packetType: undefined,
+    packetType: registerHander,
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.REGISTER_RESPONSE]: {
@@ -107,4 +108,15 @@ export const getProtoTypeNameByPacketType = (packetType) => {
     );
   }
   return packetTypes[packetType].protoType;
+};
+export const handler = async (packetType, payload) => {
+  if (!packetType) {
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `핸들러를 찾을 수 없습니다: ID ${packetType}`,
+    );
+  }
+  const handlerFunction = packetTypes[packetType].packetType;
+
+  handlerFunction(payload);
 };

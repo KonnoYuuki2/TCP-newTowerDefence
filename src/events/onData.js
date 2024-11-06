@@ -1,6 +1,6 @@
 import Config from '../config/config.js';
 import { packetParser } from '../utils/parser/packetParser.js';
-
+import { getProtoTypeNameByPacketType, handler } from '../handlers/index.js';
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -48,12 +48,17 @@ const onData = (socket) => async (data) => {
       // 실제 페이로드는 헤더 + \n, \0 을 제외한 길이
       try {
         const payload = packetParser(packet);
-
+        //console.log(payload);
         // const packetTypes = getPacketType(packetType);
         // await packetTypes({ socket, payload });
+        //console.log(packetType);
+        //const type = getProtoTypeNameByPacketType(packetType);
+        await handler(packetType, payload);
       } catch (error) {
         throw new Error(`패킷 변환중 에러 발생`, error);
       }
+      console.log('탈출');
+      break;
     }
   }
 };
