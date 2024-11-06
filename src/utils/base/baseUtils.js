@@ -4,12 +4,18 @@ import { redis } from '../redis/redis.js';
 
 export const getBaseHp = async (user) => {
   const baseHp = await redis.getUserField(user.uuid, UserFields.BASE_HP);
-  await pools.GAME_DATABASE_REDIS.hget(`user:${user.uuid}`, 'baseHp');
 
   return baseHp;
 };
 
-export const monsterAttackBaseHpVerify = async (damage, user) => {
+export const monsterAttackBaseHpVerify = async (damage) => {
+  const user = connectedSockets.forEach((value, key) => {
+    return key === socket.id;
+  });
+
+  if (!user) {
+    throw new Error(`유저가 존재하지 않습니다.`);
+  }
   const baseHp = await getBaseHp(user);
 
   if (!baseHp) {
@@ -20,4 +26,6 @@ export const monsterAttackBaseHpVerify = async (damage, user) => {
 
   // 유저 정보 업데이트 해주기
   await redis.updateUserField(user.uuid, UserFields.BASE_HP, baseHp);
+
+  console.log(`베이스 피격 정보 업데이트에 성공했습니다.`);
 };
