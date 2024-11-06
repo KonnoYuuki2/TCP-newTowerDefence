@@ -4,7 +4,8 @@ export const monsterAttackBaseHandler = async (socket, payload) => {
   try {
     const { damage } = payload;
 
-    const user = await getUserBySocket(socket);
+    // 유저가 레디스를 가져오는지 같은거 확인해야함
+    const user = await getUserBySocketId(socket.id);
 
     await monsterAttackBaseHpVerify(damage, user);
   } catch (error) {
