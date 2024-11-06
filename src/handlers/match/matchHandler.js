@@ -1,9 +1,13 @@
 import { matchQueue } from '../queues/matchQueue.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export const matchRequestHandler = async (socket, payload) => {
   try {
+    // db에서 uuid를 가져오는 쿼리로 수정 필요
+    // socket.id = await getUserUuid();
+    socket.id = uuidv4();
     const player = {
-      id: '1', // 임시값
+      id: socket.id,
       socket: socket,
     };
 
@@ -16,6 +20,5 @@ export const matchRequestHandler = async (socket, payload) => {
     console.log(`플레이어 ${player.id} 매칭 큐 진입`);
   } catch (error) {
     console.error('매칭 요청 처리 중 오류 발생:', error);
-    throw error;
   }
 };

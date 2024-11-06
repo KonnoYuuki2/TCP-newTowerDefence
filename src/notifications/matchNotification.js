@@ -1,6 +1,6 @@
 import { getProtoMessages } from '../init/loadProtos.js';
 
-export const createMatchStartNotification = (gameId, player1, player2) => {
+export const createMatchStartNotification = () => {
   const protoMessages = getProtoMessages();
   const GamePacket = protoMessages.packets.GamePacket;
 
