@@ -1,5 +1,8 @@
+import { spawnMonster } from '../../utils/monster/monsterUtils.jjs';
+
 export const spawnMonsterRequest = async (socket) => {
   try {
+    spawnMonster(uuid);
   } catch (error) {
     throw new Error('몬스터 생성 중 에러 발생', error);
   }
