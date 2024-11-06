@@ -1,7 +1,7 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
-import authHandler from './registerHander.js';
+import authHandler from './AuthHander.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -13,7 +13,7 @@ const packetTypes = {
     protoType: 'S2CRegisterResponse',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: undefined,
+    packetType: authHandler.Login,
     protoType: 'C2SLoginRequest',
   },
   [HANDLER_IDS.LOGIN_RESPONSE]: {
