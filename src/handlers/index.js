@@ -1,7 +1,7 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
-import authHandler from './AuthHander.js';
+import authHandler from './authHander.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
