@@ -3,10 +3,11 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { towerAttackHandler } from './towers/towerAttack.js';
 import { matchRequestHandler } from './match/matchHandler.js';
+import authHandler from './authHander.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
-    packetType: undefined,
+    packetType: authHandler.createUser,
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.REGISTER_RESPONSE]: {
@@ -14,7 +15,7 @@ const packetTypes = {
     protoType: 'S2CRegisterResponse',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: undefined,
+    packetType: authHandler.Login,
     protoType: 'C2SLoginRequest',
   },
   [HANDLER_IDS.LOGIN_RESPONSE]: {
@@ -91,16 +92,6 @@ const packetTypes = {
   },
 };
 
-export const getPacketType = (packetType) => {
-  if (!packetTypes[packetType]) {
-    throw new CustomError(
-      ErrorCodes.UNKNOWN_HANDLER_ID,
-      `핸들러를 찾을 수 없습니다: ID ${packetType}`,
-    );
-  }
-  return packetTypes[packetType].packetType;
-};
-
 export const getProtoTypeNameByPacketType = (packetType) => {
   if (!packetTypes[packetType]) {
     throw new CustomError(
@@ -109,4 +100,16 @@ export const getProtoTypeNameByPacketType = (packetType) => {
     );
   }
   return packetTypes[packetType].protoType;
+};
+export const handler = async (packetType, payload) => {
+  if (!packetType) {
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `핸들러를 찾을 수 없습니다: ID ${packetType}`,
+    );
+  }
+  const handlerFunction = packetTypes[packetType].packetType;
+
+  const reselt = await handlerFunction(payload);
+  return reselt;
 };

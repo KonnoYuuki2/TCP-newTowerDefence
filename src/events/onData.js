@@ -2,6 +2,7 @@ import Config from '../config/config.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { serialize } from '../utils/serializer/serialize.js';
 
+import { getProtoTypeNameByPacketType, handler } from '../handlers/index.js';
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -26,11 +27,18 @@ const onData = (socket) => async (data) => {
 
       // 0x0a (줄바꿈) , 0x0d (캐리지 리턴) 붙어서 +2 되어있음
       // 실제 페이로드는 헤더 + \n, \0 을 제외한 길이
+
       try {
         const payload = packetParser(packet);
-
+        //console.log(payload);
         // const packetTypes = getPacketType(packetType);
         // await packetTypes({ socket, payload });
+        //console.log(packetType);
+        //const type = getProtoTypeNameByPacketType(packetType);
+        const req = await handler(packetType, payload);
+        socket.write(req);
+        console.log('탈출');
+        break;
       } catch (error) {
         throw new Error(`패킷 변환중 에러 발생`, error);
       }

@@ -1,4 +1,4 @@
-import { matchQueue } from '../queues/matchQueue.js';
+import { matchQueue } from '../../bull/match/matchQueue.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export const matchRequestHandler = async (socket, payload) => {

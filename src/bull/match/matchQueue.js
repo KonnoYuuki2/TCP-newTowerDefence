@@ -1,5 +1,5 @@
 import { Queue, Worker } from 'bullmq';
-import { redis } from '../utils/redis/redis.js';
+import { redis } from '../../utils/redis/redis.js';
 import { createMatchStartNotification } from '../../notifications/matchNotification.js';
 import { v4 as uuidv4 } from 'uuid';
 import Config from '../../config/config.js';
