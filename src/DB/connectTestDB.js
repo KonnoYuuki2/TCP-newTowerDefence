@@ -20,7 +20,7 @@ const testRedis = async () => {
     userGold: 1000,
     baseHp: 100,
     towerData: [{ towerId: 1, x: 1, y: 1 }],
-    monsterData: [],
+    monsterData: [{ monsterId: 1, monsterNumber: 1, level: 1 }],
     level: 1,
     score: 0,
   };

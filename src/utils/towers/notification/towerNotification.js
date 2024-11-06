@@ -2,9 +2,10 @@ import { PacketType } from '../../../constants/header.js';
 import { getProtoMessages } from '../../../init/loadProtos.js';
 import { maketNotificationPacket } from '../../notification/notification.js';
 
-export const createS2CEnemyTowerAttackNotification = (towerId, monsterId) => {
+export const createS2CEnemyTowerAttackNotification = async (towerId, monsterId) => {
   const protoMessages = getProtoMessages();
-  const enemyTowerAttackProto = protoMessages.packets.S2CEnemyTowerAttackNotification;
+
+  const enemyTowerAttackProto = protoMessages.packets.GamePacket;
 
   const payload = { towerId, monsterId };
 

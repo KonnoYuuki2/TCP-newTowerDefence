@@ -1,6 +1,6 @@
 import Config from '../config/config.js';
 import { packetParser } from '../utils/parser/packetParser.js';
-import { serialize } from '../utils/serializer/serialize.js';
+import { deserialize, serialize } from '../utils/serializer/serialize.js';
 
 import { getProtoTypeNameByPacketType, handler } from '../handlers/index.js';
 const onData = (socket) => async (data) => {
@@ -9,7 +9,7 @@ const onData = (socket) => async (data) => {
 
   while (socket.buffer.length >= Config.PACKETS.TOTAL_HEADER_LENGTH) {
     // 직렬화된 데이터들
-    const serializeData = await serialize(socket);
+    const serializeData = await deserialize(socket);
 
     if (serializeData.version !== Config.CLIENT.VERSION) {
       throw new Error(`버전이 일치하지 않습니다.`);

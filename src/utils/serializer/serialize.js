@@ -50,9 +50,10 @@ export const serialize = (packetType, version, sequence, payload) => {
   buffer.writeUInt32BE(payloadLength, offset);
   offset += Config.PACKETS.PAYLOAD_LENGTH;
 
+  console.log(payloadLength);
   // payload 쓰기 (가변 길이)
-  payload.copy(buffer, offset);
+  const result = Buffer.concat([buffer, payload]);
   offset += payloadLength;
 
-  return buffer;
+  return result;
 };
