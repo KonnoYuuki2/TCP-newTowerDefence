@@ -1,6 +1,6 @@
+import { PacketType } from '../../constants/header.js';
 import { connectedSockets } from '../../events/onConnection.js';
-import { redis } from '../../utils/redis/redis.js';
-import { createS2CEnemyTowerAttackNotification } from '../../utils/towers/notification/towerNotification.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
 export const towerAttackHandler = async ({ socket, payload }) => {
@@ -22,10 +22,12 @@ export const towerAttackHandler = async ({ socket, payload }) => {
         break; // 첫 번째 다른 소켓을 찾았으므로 반복을 중단
       }
     }
-    //console.log(`너 없지?`, enemySocket); // 테스트 코드 상에선 없다.
+
     const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
 
-    enemySocket.write(createS2CEnemyTowerAttackNotification(towerAttackPacket));
+    enemySocket.write(
+      createResponse(PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION, 0, towerAttackPacket),
+    );
   } catch (error) {
     throw new Error(`타워 공격 정보 처리중 에러 발생`, error);
   }

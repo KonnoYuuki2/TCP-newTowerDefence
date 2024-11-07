@@ -1,5 +1,4 @@
 import { UserFields } from '../../constants/enum.js';
-import pools from '../../DB/dataBase.js';
 import { redis } from '../redis/redis.js';
 
 export const getTower = async (towerId, userId) => {
