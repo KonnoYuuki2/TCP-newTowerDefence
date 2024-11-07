@@ -6,7 +6,7 @@ export const spawnMonster = async (socket) => {
   const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
 
   let monsterId = 1;
-  let monsterNumber = 101;
+  let monsterNumber = Math.floor(Math.random() * 4) + 1;
   if (monsterData.length) {
     monsterId += monsterData[monsterData.length - 1].monsterId;
     monsterNumber += monsterData[monsterData.length - 1].monsterNumber;

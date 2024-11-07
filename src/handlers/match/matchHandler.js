@@ -34,7 +34,7 @@ export const matchRequestHandler = async ({ socket, payload }) => {
         console.log('유저 등록');
 
         // 매치 시작 알림 전송
-        const data = createMatchStartNotification();
+        const data = await createMatchStartNotification(player1Socket, player2Socket);
         console.log('페이로드 생성');
 
         const packetType = HANDLER_IDS.MATCH_START_NOTIFICATION;

@@ -1,8 +1,8 @@
 export const UserFields = {
   USER_GOLD: 'userGold',
   BASE_HP: 'baseHp',
-  TOWERS: 'towers',
-  MONSTERS: 'monsters',
+  TOWERS: 'towerData',
+  MONSTERS: 'monsterData',
   LEVEL: 'level',
   SCORE: 'score',
 };

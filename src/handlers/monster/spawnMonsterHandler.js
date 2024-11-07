@@ -3,9 +3,9 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { spawnMonster } from '../../utils/monster/monsterUtils.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-export const spawnMonsterRequest = async ({ socket }) => {
+export const spawnMonsterRequest = async ({ socket, payload }) => {
   try {
-    const { monsterId, monsterNumber } = spawnMonster(socket);
+    const { monsterId, monsterNumber } = await spawnMonster(socket);
     // 해당 함수에서 socket.id를 받아서 해줌
     const S2CSpawnMonsterResponse = {
       monsterId: monsterId,
