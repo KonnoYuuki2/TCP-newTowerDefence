@@ -36,15 +36,14 @@ export const matchRequestHandler = async ({ socket, payload }) => {
         player1Socket.gameId = gameId;
         player2Socket.gameId = gameId;
         // 매치 시작 알림 전송
-        const data1 = await createUserData(player1Socket.id);
-        const data2 = await createUserData(player2Socket.id);
+        const { packet1, packet2 } = await createUserData(player1Socket.id, player2Socket.id);
         console.log('페이로드 생성');
 
         const packetType = HANDLER_IDS.MATCH_START_NOTIFICATION;
         const version = Config.CLIENT.VERSION;
         const sequence = 0;
-        const buffer1 = createResponse(packetType, sequence, data1);
-        const buffer2 = createResponse(packetType, sequence, data2);
+        const buffer1 = createResponse(packetType, sequence, packet1);
+        const buffer2 = createResponse(packetType, sequence, packet2);
         console.log('버퍼 생성');
 
         player1Socket.write(buffer1);
