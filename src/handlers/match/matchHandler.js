@@ -33,6 +33,8 @@ export const matchRequestHandler = async ({ socket, payload }) => {
         await redis.addUser(gameId, player2.id);
         console.log('유저 등록');
 
+        player1Socket.gameId = gameId;
+        player2Socket.gameId = gameId;
         // 매치 시작 알림 전송
         const data = await createMatchStartNotification(player1Socket, player2Socket);
         console.log('페이로드 생성');
