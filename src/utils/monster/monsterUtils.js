@@ -3,10 +3,10 @@ import { redis } from '../redis/redis.js';
 
 // 몬스터데이터 리스트에 새로운 몬스터아이디를 가진 객체를 생성해서 배열에 추가
 export const spawnMonster = async (socket) => {
-  const monsterData = redis.getUserField(socket.id, UserFields.MONSTERS);
+  const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
 
   let monsterId = 1;
-  let monsterNumber = 101;
+  let monsterNumber = Math.floor(Math.random() * 4) + 1;
   if (monsterData.length) {
     monsterId += monsterData[monsterData.length - 1].monsterId;
     monsterNumber += monsterData[monsterData.length - 1].monsterNumber;
