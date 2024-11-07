@@ -1,5 +1,5 @@
 import { PacketType } from '../../constants/header.js';
-import { createS2CEnemySpawnMonsterNotification } from '../../utils/monster/monsterNotification/monsterNotification.js';
+import { getProtoMessages } from '../../init/loadProtos.js';
 import { spawnMonster } from '../../utils/monster/monsterUtils.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -22,28 +22,22 @@ export const spawnMonsterRequest = async (socket) => {
   }
 };
 
-// export const spawnMonsterResponse = async (socket, payload) => {
-//   try {
-//     const { monsterId, monsterNumber } = payload;
+export const enemySpawnMonsterNotification = async (socket, payload) => {
+  try {
+    const { monsterId, monsterNumber } = payload;
+    const protoMessages = getProtoMessages();
+    const GamePacket = protoMessages.packets.GamePacket;
 
-//     socket.write(createS2CSpawnMonsterNotification(monsterId, monsterNumber));
-//     // 해당 유저의 소켓에 적기
-//   } catch (error) {
-//     throw new Error('몬스터 생성 응답중 에러 발생', error);
-//   }
-// };
-// request에서 response를 반납하기 때문에 주석처리
+    const S2CSpawnEnemyMonsterNotification = {
+      monsterId: monsterId,
+      monsterNumber: monsterNumber,
+    };
+    const packet = {
+      spawnEnemyMonsterNotification: S2CSpawnEnemyMonsterNotification,
+    };
 
-// export const enemySpawnMonsterNotification = async (socket, payload) => {
-//   try {
-//     const { monsterId, monsterNumber } = payload;
-
-//     const getEnemySocket = getEnemySocket(socket);
-//     // 상대 소켓을 구하기
-
-//     getEnemySocket.write(createS2CEnemySpawnMonsterNotification(monsterId, monsterNumber));
-//   } catch (error) {
-//     throw new Error('상대 몬스터 생성 중 에러 발생', error);
-//   }
-// };
-// 미완성 코드
+    return GamePacket.encode(packet).finish();
+  } catch (error) {
+    throw new Error('상대 몬스터 생성 중 에러 발생', error);
+  }
+};
