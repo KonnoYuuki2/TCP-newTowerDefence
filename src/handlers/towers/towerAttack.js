@@ -13,10 +13,15 @@ export const towerAttackHandler = async ({ socket, payload }) => {
     await towerAttackVerifiy(towerId, monsterId, socket.id);
 
     // 적 유저 정보 가져옴
-    const enemySocket = connectedSockets.forEach((value, key) => {
-      return key !== socket.id;
-    });
 
+    let enemySocket;
+
+    for (const key of connectedSockets.keys()) {
+      if (key !== socket.id) {
+        enemySocket = connectedSockets.get(key);
+        break; // 첫 번째 다른 소켓을 찾았으므로 반복을 중단
+      }
+    }
     //console.log(`너 없지?`, enemySocket); // 테스트 코드 상에선 없다.
     const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
 
