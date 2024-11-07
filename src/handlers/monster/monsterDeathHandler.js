@@ -1,7 +1,7 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { monsterDeath } from '../../utils/monster/monsterUtils.js';
 
-export const monsterDeathNotification = async (socket, payload) => {
+export const monsterDeathNotification = async ({ socket, payload }) => {
   try {
     const { monsterId } = payload;
     monsterDeath(socket, monsterId);
@@ -22,7 +22,7 @@ export const monsterDeathNotification = async (socket, payload) => {
   }
 };
 
-export const enemyMonsterDeathNotification = async (socket, payload) => {
+export const enemyMonsterDeathNotification = async ({ socket, payload }) => {
   try {
     const { monsterId } = payload;
 
@@ -33,9 +33,9 @@ export const enemyMonsterDeathNotification = async (socket, payload) => {
       monsterId: monsterId,
     };
     const packet = {
-      enemyMonsterDeathNotification: S2CEnemyMonsterDeathNotification
-    }
-    
+      enemyMonsterDeathNotification: S2CEnemyMonsterDeathNotification,
+    };
+
     return GamePacket.encode(packet).finish();
   } catch (error) {
     throw new Error('몬스터 생성 중 에러 발생', error);

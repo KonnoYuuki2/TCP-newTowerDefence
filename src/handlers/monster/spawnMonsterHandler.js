@@ -3,7 +3,7 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { spawnMonster } from '../../utils/monster/monsterUtils.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-export const spawnMonsterRequest = async (socket) => {
+export const spawnMonsterRequest = async ({ socket }) => {
   try {
     const { monsterId, monsterNumber } = spawnMonster(socket);
     // 해당 함수에서 socket.id를 받아서 해줌
@@ -22,7 +22,7 @@ export const spawnMonsterRequest = async (socket) => {
   }
 };
 
-export const enemySpawnMonsterNotification = async (socket, payload) => {
+export const enemySpawnMonsterNotification = async ({ socket, payload }) => {
   try {
     const { monsterId, monsterNumber } = payload;
     const protoMessages = getProtoMessages();
