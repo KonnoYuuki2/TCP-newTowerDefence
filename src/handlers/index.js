@@ -2,7 +2,7 @@ import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { matchRequestHandler } from './match/matchHandler.js';
-import { register, login } from './authHander.js';
+import { register, login } from './authHandler.js';
 import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
 
 const packetTypes = {
