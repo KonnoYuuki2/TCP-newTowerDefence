@@ -42,7 +42,9 @@ const testRedis = async () => {
 
   await redis.addUser(1, user1);
   await redis.addUser(1, user2);
-  const data = await redis.getUser(1, 23);
+  const data = await redis.getUsers(1, 23);
+
+  //console.log(`sample`, await redis.getUserData(1));
   console.log('redis: getUser', data);
 };
 

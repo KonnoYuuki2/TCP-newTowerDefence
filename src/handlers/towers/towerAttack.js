@@ -8,17 +8,16 @@ export const towerAttackHandler = async ({ socket, payload }) => {
     const fieldName = Object.keys(payload)[0];
 
     const { towerId, monsterId } = payload[fieldName];
-    console.log(`야아아아아아악`, towerId, monsterId);
 
     // 타워, 몬스터 유무 검증
-    await towerAttackVerifiy(towerId, monsterId);
+    await towerAttackVerifiy(towerId, monsterId, socket.id);
 
     // 적 유저 정보 가져옴
     const enemySocket = connectedSockets.forEach((value, key) => {
       return key !== socket.id;
     });
 
-    console.log(`너 없지?`, enemySocket);
+    //console.log(`너 없지?`, enemySocket); // 테스트 코드 상에선 없다.
     const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
 
     enemySocket.write(createS2CEnemyTowerAttackNotification(towerAttackPacket));
