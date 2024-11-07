@@ -8,8 +8,8 @@ export const spawnMonster = async (socket) => {
   let monsterId = 1;
   let monsterNumber = 101;
   if (monsterData.length) {
-    monsterId += monsterData[monsterData.length-1].monsterId;
-    monsterNumber += monsterData[monsterData.length-1].monsterNumber;
+    monsterId += monsterData[monsterData.length - 1].monsterId;
+    monsterNumber += monsterData[monsterData.length - 1].monsterNumber;
   }
   // 잘못된 접근방식입니다. 지금 방식이 생각이 안나서
   // 몬스터가 존재할 때 가장 높은 Id와 Number를 가진 몬스터에서 +1을 하도록 했는데
@@ -21,7 +21,7 @@ export const spawnMonster = async (socket) => {
 
   await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
 
-  return spawnMonster
+  return spawnMonster;
 };
 
 // 몬스터데이터 리스트에서 죽은 몬스터의Id를 찾아서 해당 아이디를 가진 몬스터를 제거
@@ -31,6 +31,7 @@ export const monsterDeath = async (socket, monsterId) => {
   for (let i = 0; i < monsterData.length; i++) {
     if (monsterData[i].monsterId === monsterId) {
       monsterData.splice(i, 1);
+      Deathmonster = monsterData[i];
     }
   }
 
