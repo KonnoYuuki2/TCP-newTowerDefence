@@ -1,15 +1,22 @@
-import Config from "../config/config.js";
+import Config from '../config/config.js';
 
 const onData = (socket) => (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
-  const totalHeaderLength = Config.PACKETS.PACKET_TYPE_LENGTH + Config.PACKETS.VERSION_LENGTH + Config.PACKETS.SEQUENCE_LENGTH;
+  const totalHeaderLength =
+    Config.PACKETS.PACKET_TYPE_LENGTH +
+    Config.PACKETS.VERSION_LENGTH +
+    Config.PACKETS.SEQUENCE_LENGTH;
 
   while (socket.buffer.length >= totalHeaderLength) {
     const packetType = socket.buffer.readUInt16BE(0);
     const version = socket.buffer.readUInt8(Config.PACKETS.PACKET_TYPE_LENGTH);
-    const sequence = socket.buffer.readUInt32(Config.PACKETS.PACKET_TYPE_LENGTH + Config.PACKETS.VERSION_LENGTH + Config.PACKETS.SEQUENCE_LENGTH);
+    const sequence = socket.buffer.readUInt32(
+      Config.PACKETS.PACKET_TYPE_LENGTH +
+        Config.PACKETS.VERSION_LENGTH +
+        Config.PACKETS.SEQUENCE_LENGTH,
+    );
 
     if (version !== Config.Client.VERSION) {
       throw new Error(`버전이 일치하지 않습니다.`);
