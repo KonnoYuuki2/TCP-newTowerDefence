@@ -2,11 +2,13 @@
 
 // handlerId 필드 → packetType 필드
 
-const packetType = 2;
-const versionLength = 1;
+const PACKET_TYPE = 2;
+const VERSION_LENGTH = 1;
+const VERSION = 5; // 버전 스트링 길이
+const SEQUENCE = 4; // 패킷 번호
+const PAYLOAD_LENGTH = 4;
 
-const sequence = 4; // 패킷 번호
-const payloadLength = 4;
+const TOTAL_HEADER_LENGTH = PACKET_TYPE + VERSION_LENGTH + VERSION + SEQUENCE + PAYLOAD_LENGTH;
 
 // 위쪽에 패킷들에 대한 정보를 저장해둔 것
 const PacketFields = {
@@ -57,4 +59,4 @@ const PacketType = {
   ENEMY_MONSTER_DEATH_NOTIFICATION: 21,
 };
 
-export { PacketType, PacketFields };
+export { PacketType, PacketFields, TOTAL_HEADER_LENGTH };

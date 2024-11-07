@@ -59,3 +59,10 @@ export const loadProtos = async () => {
     console.error(`프로토 로딩중 에러 발생`, error);
   }
 };
+
+export const getProtoMessages = () => {
+  //console.log(protoMessages.packets.C2SRegisterRequest); // C2SRegisterRequest에 접근
+
+  return { ...protoMessages };
+};
+//setTimeout(getProtoMessages, 1200);
