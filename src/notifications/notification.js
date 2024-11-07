@@ -1,4 +1,4 @@
-import Config from '../../config/config.js';
+import Config from '../config/config.js';
 
 export const maketNotificationPacket = (packet, type) => {
   const packetType = Buffer.alloc(Config.PACKETS.PACKET_TYPE_LENGTH);

@@ -8,7 +8,7 @@ import Config from '../config/config.js';
 
 const SALTROUNDS = 10;
 
-export const register = async (socket, payload) => {
+export const register = async ({ socket, payload }) => {
   //console.dir(payload, { depth: null });
   const fieldName = Object.keys(payload)[0];
   if (fieldName === 'registerRequest') {
@@ -48,8 +48,7 @@ export const register = async (socket, payload) => {
   }
 };
 
-export const login = async (socket, payload) => {
-  console.dir(payload, { depth: null });
+export const login = async ({ socket, payload }) => {
   const fieldName = Object.keys(payload)[0];
   if (fieldName === 'loginRequest') {
     const { id, password } = payload[fieldName];

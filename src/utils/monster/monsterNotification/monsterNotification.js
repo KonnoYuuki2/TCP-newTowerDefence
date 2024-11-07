@@ -1,5 +1,5 @@
 import { PacketType } from '../../../constants/header.js';
-import { maketNotificationPacket } from '../../notification/notification.js';
+import { maketNotificationPacket } from '../../../notifications/notification.js';
 import { createDeathMonsterSocket, createSpawnMonsterSocket } from './createSocketUtil.js';
 
 export const createS2CSpawnMonsterNotification = (monsterId, mosnsterNumber) => {
