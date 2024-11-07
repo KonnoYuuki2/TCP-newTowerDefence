@@ -1,10 +1,12 @@
 import { PacketType } from '../../constants/header.js';
+import { connectedSockets } from '../../events/onConnection.js';
 import { spawnMonster } from '../../utils/monster/monsterUtils.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 export const spawnMonsterRequest = async ({ socket, payload }) => {
   try {
     const { monsterId, monsterNumber } = await spawnMonster(socket);
+
     // 해당 함수에서 socket.id를 받아서 해줌
     const S2CSpawnMonsterResponse = {
       monsterId: monsterId,
@@ -13,9 +15,22 @@ export const spawnMonsterRequest = async ({ socket, payload }) => {
     const gamePacket = {
       spawnMonsterResponse: S2CSpawnMonsterResponse,
     };
-    const result = createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket);
-    console.log('Serialized response:', result);
-    socket.write(result);
+
+    // enemySpawnNotfication 패킷
+    const enemySpawnPacket = {
+      spawnEnemyMonsterNotification: { monsterId: monsterId, monsterNumber: monsterNumber },
+    };
+
+    // 각 유저의 소켓마다 다른 패킷 전송
+    connectedSockets.forEach((value, key) => {
+      if (key === socket.id) {
+        value.write(createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket));
+      } else {
+        value.write(
+          createResponse(PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, 0, enemySpawnPacket),
+        );
+      }
+    });
   } catch (error) {
     throw new Error('몬스터 생성 요청중 에러 발생', error);
   }
