@@ -2,6 +2,7 @@ import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { matchRequestHandler } from './match/matchHandler.js';
+import { monsterAttackBaseHandler } from './base/monsterAttackBaseHandler.js';
 import { register, login } from './authHander.js';
 
 const packetTypes = {
@@ -58,7 +59,7 @@ const packetTypes = {
     protoType: 'S2CSpawnEnemyMonsterNotification',
   },
   [HANDLER_IDS.TOWER_ATTACK_REQUEST]: {
-    packetType: monsterAttackBaseHandler,
+    packetType: undefined,
     protoType: 'C2STowerAttackRequest',
   },
   [HANDLER_IDS.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
@@ -66,7 +67,7 @@ const packetTypes = {
     protoType: 'S2CEnemyTowerAttackNotification',
   },
   [HANDLER_IDS.MONSTER_ATTACK_BASE_REQUEST]: {
-    packetType: undefined,
+    packetType: monsterAttackBaseHandler,
     protoType: 'C2SMonsterAttackBaseRequest',
   },
   [HANDLER_IDS.UPDATE_BASE_HP_NOTIFICATION]: {

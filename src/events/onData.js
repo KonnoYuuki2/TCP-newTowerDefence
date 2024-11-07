@@ -32,6 +32,7 @@ const onData = (socket) => async (data) => {
         console.log('payload', payload);
 
         await handler(socket, deserializeData.packetType, payload);
+
         console.log('탈출');
         break;
       } catch (error) {
