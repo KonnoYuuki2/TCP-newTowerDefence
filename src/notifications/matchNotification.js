@@ -1,10 +1,7 @@
-import { getProtoMessages } from '../init/loadProtos.js';
+import path from '../utils/path/createPath.js';
 import { redis } from '../utils/redis/redis.js';
 
-export const createMatchStartNotification = async (player1Socket, player2Socket) => {
-  const protoMessages = getProtoMessages();
-  const GamePacket = protoMessages.packets.GamePacket;
-
+export const createUserData = async (userId) => {
   // 초기 게임 상태 설정
   const initialGameState = {
     baseHp: 100,
@@ -29,10 +26,7 @@ export const createMatchStartNotification = async (player1Socket, player2Socket)
     ],
     monsterLevel: 1,
     score: 0,
-    monsterPath: [
-      { x: 0, y: 300 },
-      { x: 1500, y: 300 },
-    ],
+    monsterPath: [...path],
     basePosition: { x: 1350, y: 300 },
   };
 
@@ -53,8 +47,7 @@ export const createMatchStartNotification = async (player1Socket, player2Socket)
     score: playerData.score,
   };
 
-  await redis.setUserData(player1Socket.id, userData);
-  await redis.setUserData(player2Socket.id, userData);
+  await redis.setUserData(userId, userData);
 
-  return GamePacket.encode(packet).finish();
+  return packet;
 };
