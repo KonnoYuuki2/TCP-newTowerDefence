@@ -10,15 +10,16 @@ const SALTROUNDS = 10;
 
 export const register = async ({ socket, payload }) => {
   //console.dir(payload, { depth: null });
+
   const fieldName = Object.keys(payload)[0];
   if (fieldName === 'registerRequest') {
     const { id, password, email } = payload[fieldName];
     const uuid = uuidv4();
     const isEmail = isValidEmail(email);
-    const isUserRegistered = await findUser(id);
+    const isUserRegistered = isEmptyArray(await findUser(id));
     let message = '';
     let isSuccess = false;
-    if (isEmail && isUserRegistered == null) {
+    if (isEmail && isUserRegistered) {
       const newPassword = await bcrypt.hash(password, SALTROUNDS);
       await createUser(id, uuid, newPassword, email);
       message = '정상적으로 생성되었습니다.';
@@ -28,7 +29,7 @@ export const register = async ({ socket, payload }) => {
       if (!isEmail) {
         message = '이메일 형식이 아닙니다.';
         console.log('이메일 형식 틀림.');
-      } else if (!(isUserRegistered == null)) {
+      } else if (!isUserRegistered) {
         message = '이미 존재하는 유저입니다.';
         console.log('존재하는 유저 있음.');
       }
@@ -47,17 +48,18 @@ export const register = async ({ socket, payload }) => {
     socket.write(result);
   }
 };
-
 export const login = async ({ socket, payload }) => {
+  //console.dir(payload, { depth: null });
   const fieldName = Object.keys(payload)[0];
   if (fieldName === 'loginRequest') {
     const { id, password } = payload[fieldName];
 
     const sqlUserData = await findUser(id);
+    const isUserRegistered = isEmptyArray(sqlUserData);
     let isSuccess = false;
     let message = '';
     let token;
-    if (sqlUserData == null) {
+    if (isUserRegistered) {
       message = '없는 유저입니다.';
     } else {
       const isMatch = await bcrypt.compare(password, sqlUserData[0].password);
@@ -91,4 +93,7 @@ export const login = async ({ socket, payload }) => {
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
+}
+function isEmptyArray(arr) {
+  return Array.isArray(arr) && arr.length === 0;
 }

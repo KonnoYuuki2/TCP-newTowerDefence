@@ -15,7 +15,6 @@ export const createUser = async (account_id, uuid, password, email) => {
   await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_USER, [account_id, uuid, password, email]);
   return { account_id, uuid, password, email };
 };
-
 // export const updateUserLogin = async (id) => {
 //   await pools.USER_DATABASE_SQL.query(SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
 // };
