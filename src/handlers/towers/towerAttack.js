@@ -1,5 +1,6 @@
 import { PacketType } from '../../constants/header.js';
 import { connectedSockets } from '../../events/onConnection.js';
+import { redis } from '../../utils/redis/redis.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
@@ -12,15 +13,16 @@ export const towerAttackHandler = async ({ socket, payload }) => {
     // 타워, 몬스터 유무 검증
     await towerAttackVerifiy(towerId, monsterId, socket.id);
 
-    // 적 유저 정보 가져옴
-    let enemySocket;
+    // 모든 유저 정보 가져옴
+    const users = await redis.getUsers(socket.gameId);
 
-    for (const key of connectedSockets.keys()) {
-      if (key !== socket.id) {
-        enemySocket = connectedSockets.get(key);
-        break; // 첫 번째 다른 소켓을 찾았으므로 반복을 중단
-      }
-    }
+    // 유저 정보중에 socket.id랑 같지 않은 => 다른 유저의 소켓을 찾음
+    const socketId = users.find((user) => {
+      return user !== socket.id;
+    });
+
+    // 찾은 socketId로 connectedSockets에 조회하여 찾음
+    const enemySocket = connectedSockets.get(socketId);
 
     const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
 
