@@ -13,7 +13,6 @@ export const towerAttackHandler = async ({ socket, payload }) => {
     await towerAttackVerifiy(towerId, monsterId, socket.id);
 
     // 적 유저 정보 가져옴
-
     let enemySocket;
 
     for (const key of connectedSockets.keys()) {
