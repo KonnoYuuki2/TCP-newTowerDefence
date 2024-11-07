@@ -2,60 +2,94 @@ import { createUser, findUser } from '../DB/user/user.db.js';
 import { createResponse } from '../utils/response/createResponse.js';
 import { PacketType } from '../constants/header.js';
 import bcrypt from 'bcrypt';
-class AuthHandler {
-  constructor() {
-    Object.freeze(this);
+import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
+import Config from '../config/config.js';
+
+const SALTROUNDS = 10;
+
+export const register = async (socket, payload) => {
+  //console.dir(payload, { depth: null });
+  const fieldName = Object.keys(payload)[0];
+  if (fieldName === 'registerRequest') {
+    const { id, password, email } = payload[fieldName];
+    const uuid = uuidv4();
+    const isEmail = isValidEmail(email);
+    const isUserRegistered = await findUser(id);
+    let message = '';
+    let isSuccess = false;
+    if (isEmail && isUserRegistered == null) {
+      const newPassword = await bcrypt.hash(password, SALTROUNDS);
+      await createUser(id, uuid, newPassword, email);
+      message = '정상적으로 생성되었습니다.';
+      isSuccess = true;
+      console.log('정상적');
+    } else {
+      if (!isEmail) {
+        message = '이메일 형식이 아닙니다.';
+        console.log('이메일 형식 틀림.');
+      } else if (!(isUserRegistered == null)) {
+        message = '이미 존재하는 유저입니다.';
+        console.log('존재하는 유저 있음.');
+      }
+    }
+
+    const S2CRegisterResponse = {
+      success: isSuccess,
+      message: message,
+      GlobalFailCode: 'NONE',
+    };
+    const gamePacket = {
+      registerResponse: S2CRegisterResponse,
+    };
+    const result = createResponse(PacketType.REGISTER_RESPONSE, 0, gamePacket);
+    //console.log(result);
+    socket.write(result);
   }
-  createUser = async ({ socket, payload }) => {
-    //console.dir(payload, { depth: null });
-    const fieldName = Object.keys(payload)[0];
-    if (fieldName === 'registerRequest') {
-      const { id, password, email } = payload[fieldName];
+};
 
-      //이메일 형식 검사 필요
-      await createUser(id, password, email);
+export const login = async (socket, payload) => {
+  console.dir(payload, { depth: null });
+  const fieldName = Object.keys(payload)[0];
+  if (fieldName === 'loginRequest') {
+    const { id, password } = payload[fieldName];
 
-      const S2CRegisterResponse = {
-        success: true,
-        message: 'Test',
-        GlobalFailCode: 'NONE',
-      };
-      const gamePacket = {
-        registerResponse: S2CRegisterResponse,
-      };
-      const result = createResponse(PacketType.REGISTER_RESPONSE, 0, gamePacket);
-      console.log('Serialized response:', result);
-      socket.write(result);
-    }
-  };
-
-  Login = async ({ socket, payload }) => {
-    console.dir(payload, { depth: null });
-    const fieldName = Object.keys(payload)[0];
-    if (fieldName === 'loginRequest') {
-      const { id, password } = payload[fieldName];
-      const sqlUserData = await findUser(id);
-
+    const sqlUserData = await findUser(id);
+    let isSuccess = false;
+    let message = '';
+    let token;
+    if (sqlUserData == null) {
+      message = '없는 유저입니다.';
+    } else {
       const isMatch = await bcrypt.compare(password, sqlUserData[0].password);
-      console.log(isMatch);
-      // 없을 때 처리도 필요함
-      // 일단 무조건 성공
-      // JWT 추가해야됨
-      const S2CLoginResponse = {
-        success: isMatch,
-        message: null,
-        token: null,
-        failCode: 'NONE',
-      };
-      const gamePacket = {
-        loginResponse: S2CLoginResponse,
-      };
-      const result = createResponse(PacketType.LOGIN_RESPONSE, 0, gamePacket);
-      console.log(result);
-      socket.write(result);
+      if (isMatch) {
+        message = '성공';
+        const data = { id: id };
+        const options = { expiresIn: '6h' };
+        token = jwt.sign(data, Config.SERVER.JWT_SECRETKEY, options);
+        isSuccess = true;
+      } else {
+        message = '비밀번호가 틀렸습니다.';
+        const token = null;
+      }
     }
-  };
-}
 
-const authHandler = new AuthHandler();
-export default authHandler;
+    const S2CLoginResponse = {
+      success: isSuccess,
+      message: message,
+      token: token,
+      failCode: 'NONE',
+    };
+    const gamePacket = {
+      loginResponse: S2CLoginResponse,
+    };
+    const result = createResponse(PacketType.LOGIN_RESPONSE, 0, gamePacket);
+    //console.log(result);
+    socket.write(result);
+  }
+};
+
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
