@@ -26,12 +26,12 @@ export const spawnMonster = async (socket) => {
 
 // 몬스터데이터 리스트에서 죽은 몬스터의Id를 찾아서 해당 아이디를 가진 몬스터를 제거
 export const monsterDeath = async (socket, monsterId) => {
-  const monsterData = redis.getUserField(socket.id, UserFields.MONSTERS);
+  const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
 
   for (let i = 0; i < monsterData.length; i++) {
     if (monsterData[i].monsterId === monsterId) {
       monsterData.splice(i, 1);
-      Deathmonster = monsterData[i];
+      break;
     }
   }
 

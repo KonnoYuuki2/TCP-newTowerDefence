@@ -1,10 +1,11 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { towerAttackHandler } from './towers/towerAttack.js';
 import { matchRequestHandler } from './match/matchHandler.js';
 import { register, login } from './authHandler.js';
 import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
-
+import { monsterDeathHandler } from './monster/monsterDeathHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: register,
@@ -59,7 +60,7 @@ const packetTypes = {
     protoType: 'S2CSpawnEnemyMonsterNotification',
   },
   [HANDLER_IDS.TOWER_ATTACK_REQUEST]: {
-    packetType: undefined,
+    packetType: towerAttackHandler,
     protoType: 'C2STowerAttackRequest',
   },
   [HANDLER_IDS.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
@@ -83,7 +84,7 @@ const packetTypes = {
     protoType: 'C2SGameEndRequest',
   },
   [HANDLER_IDS.MONSTER_DEATH_NOTIFICATION]: {
-    packetType: undefined,
+    packetType: monsterDeathHandler,
     protoType: 'C2SMonsterDeathNotification',
   },
   [HANDLER_IDS.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
