@@ -31,7 +31,6 @@ export const monsterDeath = async (socket, monsterId) => {
   for (let i = 0; i < monsterData.length; i++) {
     if (monsterData[i].monsterId === monsterId) {
       monsterData.splice(i, 1);
-      Deathmonster = monsterData[i];
     }
   }
 
