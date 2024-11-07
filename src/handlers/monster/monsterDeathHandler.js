@@ -6,7 +6,10 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 export const monsterDeathHandler = async ({ socket, payload }) => {
   try {
-    const { monsterId } = payload;
+    const fieldName = Object.keys(payload)[0];
+
+    const { monsterId } = payload[fieldName];
+
     await monsterDeath(socket, monsterId);
 
     const S2CMonsterDeathNotification = {

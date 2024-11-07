@@ -29,10 +29,10 @@ const onData = (socket) => async (data) => {
 
       try {
         const payload = packetParser(packet);
-        console.log('payload', payload);
+        // console.log('payload', payload);
 
         await handler(socket, deserializeData.packetType, payload);
-        console.log('탈출');
+        //console.log('탈출');
         break;
       } catch (error) {
         throw new Error(`패킷 변환중 에러 발생`, error);
