@@ -3,7 +3,8 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { towerAttackHandler } from './towers/towerAttack.js';
 import { matchRequestHandler } from './match/matchHandler.js';
-import { register, login } from './authHander.js';
+import { register, login } from './authHandler.js';
+import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -47,7 +48,7 @@ const packetTypes = {
     protoType: 'S2CAddEnemyTowerNotification',
   },
   [HANDLER_IDS.SPAWN_MONSTER_REQUEST]: {
-    packetType: undefined,
+    packetType: spawnMonsterRequest,
     protoType: 'C2SSpawnMonsterRequest',
   },
   [HANDLER_IDS.SPAWN_MONSTER_RESPONSE]: {
