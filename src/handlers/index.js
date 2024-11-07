@@ -5,7 +5,7 @@ import { towerAttackHandler } from './towers/towerAttack.js';
 import { matchRequestHandler } from './match/matchHandler.js';
 import { register, login } from './authHandler.js';
 import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
-
+import { monsterDeathHandler } from './monster/monsterDeathHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: register,
@@ -84,7 +84,7 @@ const packetTypes = {
     protoType: 'C2SGameEndRequest',
   },
   [HANDLER_IDS.MONSTER_DEATH_NOTIFICATION]: {
-    packetType: undefined,
+    packetType: monsterDeathHandler,
     protoType: 'C2SMonsterDeathNotification',
   },
   [HANDLER_IDS.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
