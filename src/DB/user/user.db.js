@@ -1,7 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
 import pools from '../dataBase.js';
 import { SQL_QUERIES } from './user.queries.js';
-import bcrypt from 'bcrypt';
 import CustomError from '../../utils/error/customError.js';
 export const findUser = async (account_id) => {
   const reselt = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_USER_BY_ACCOUNT_ID, [
