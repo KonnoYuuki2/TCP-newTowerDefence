@@ -2,12 +2,12 @@ import HANDLER_IDS from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { matchRequestHandler } from './match/matchHandler.js';
-import authHandler from './authHander.js';
+import { register, login } from './authHander.js';
 import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
-    packetType: authHandler.createUser,
+    packetType: register,
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.REGISTER_RESPONSE]: {
@@ -15,7 +15,7 @@ const packetTypes = {
     protoType: 'S2CRegisterResponse',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: authHandler.Login,
+    packetType: login,
     protoType: 'C2SLoginRequest',
   },
   [HANDLER_IDS.LOGIN_RESPONSE]: {
