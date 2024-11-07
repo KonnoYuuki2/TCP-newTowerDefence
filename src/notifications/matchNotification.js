@@ -15,7 +15,7 @@ export const createMatchStartNotification = async (player1Socket, player2Socket)
 
   // 플레이어 데이터 설정
   const playerData = {
-    gold: initialGameState.initialGold,
+    userGold: initialGameState.initialGold,
     base: { hp: initialGameState.baseHp, maxHp: initialGameState.baseHp },
     highScore: 0,
     towers: [
