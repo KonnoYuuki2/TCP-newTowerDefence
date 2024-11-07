@@ -20,7 +20,7 @@ export const monsterAttackBaseHpVerify = async (damage, userId) => {
   // 유저 정보 업데이트 해주기
   await redis.updateUserField(userId, UserFields.BASE_HP, baseHp);
 
-  console.log(await redis.getUserData(1));
+  console.log(await redis.getUserData(userId));
 
   console.log(`베이스 피격 정보 업데이트에 성공했습니다.`);
 };
