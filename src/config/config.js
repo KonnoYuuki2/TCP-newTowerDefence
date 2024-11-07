@@ -10,6 +10,7 @@ const Config = {
     PORT: envFiles.Server.PORT,
     HOST: envFiles.Server.HOST,
     VERSION: envFiles.Server.VERSION,
+    JWT_SECRETKEY: envFiles.Server.JWT_SECRETKEY,
   },
   PACKETS: {
     PACKET_TYPE_LENGTH: PacketFields.PACKET_TYPE_LENGTH,

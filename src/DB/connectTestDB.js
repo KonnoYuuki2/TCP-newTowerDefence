@@ -20,31 +20,22 @@ const testRedis = async () => {
     userGold: 1000,
     baseHp: 100,
     towerData: [{ towerId: 1, x: 1, y: 1 }],
-    monsterData: [{ monsterId: 1, monsterNumber: 1, level: 1 }],
+    monsterData: [
+      { monsetId: 1, monsetNumber: 1 },
+      { monsetId: 2, monsetNumber: 2 },
+    ],
     level: 1,
     score: 0,
   };
 
   await redis.setUserData(1, userData);
 
-  const user1 = {
-    socket: {
-      id: 123,
-    },
-    id: 12,
-  };
-  const user2 = {
-    socket: {
-      id: 234,
-    },
-    id: 23,
-  };
+  const user1 = 12;
+  const user2 = 23;
 
   await redis.addUser(1, user1);
   await redis.addUser(1, user2);
-  const data = await redis.getUsers(1, 23);
-
-  //console.log(`sample`, await redis.getUserData(1));
+  const data = await redis.getUser(1, 23);
   console.log('redis: getUser', data);
 };
 

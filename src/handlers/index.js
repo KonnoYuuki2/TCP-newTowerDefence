@@ -3,11 +3,11 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { towerAttackHandler } from './towers/towerAttack.js';
 import { matchRequestHandler } from './match/matchHandler.js';
-import authHandler from './authHander.js';
+import { register, login } from './authHander.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
-    packetType: authHandler.createUser,
+    packetType: register,
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.REGISTER_RESPONSE]: {
@@ -15,7 +15,7 @@ const packetTypes = {
     protoType: 'S2CRegisterResponse',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: authHandler.Login,
+    packetType: login,
     protoType: 'C2SLoginRequest',
   },
   [HANDLER_IDS.LOGIN_RESPONSE]: {

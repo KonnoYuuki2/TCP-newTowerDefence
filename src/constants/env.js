@@ -7,6 +7,7 @@ const envFiles = {
     PORT: process.env.PORT || 5555,
     HOST: process.env.HOST || 'localhost',
     VERSION: process.env.VERSION || '1.0.0',
+    JWT_SECRETKEY: process.env.JWT_SECRETKEY || 'SecretKey',
   },
   Client: {
     VERSION: process.env.VERSION,
