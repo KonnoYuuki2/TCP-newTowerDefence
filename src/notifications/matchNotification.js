@@ -20,7 +20,10 @@ export const createUserData = async (userId) => {
       { towerId: 2, x: 550, y: 300 },
       { towerId: 3, x: 450, y: 250 },
     ],
-    monsters: [{ monsterId: 1, monsterNumber: 1 }],
+    monsters: [
+      // { monsterId: 1, monsterNumber: 1 },
+      // { monsterId: 2, monsterNumber: 2 },
+    ],
     monsterLevel: 1,
     score: 0,
     monsterPath: [...path],
