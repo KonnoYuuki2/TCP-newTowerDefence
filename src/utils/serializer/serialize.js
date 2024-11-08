@@ -1,6 +1,11 @@
 import Config from '../../config/config.js';
 import { TOTAL_HEADER_LENGTH } from '../../constants/header.js';
 
+/**
+ * 역직렬화 함수
+ * @param {Socket} socket
+ * @returns { packetType, version, sequence, payloadLength, offset } 역직렬화한 데이터
+ */
 export const deserialize = async (socket) => {
   let offset = 0;
 
@@ -22,8 +27,15 @@ export const deserialize = async (socket) => {
   return { packetType, version, sequence, payloadLength, offset };
 };
 
-export const serialize = (packetType, sequence, payload) => {
-  const versionBuffer = Buffer.from(Config.SERVER.VERSION, 'utf-8'); // 버전 문자열을 버퍼로 변환
+/**
+ * 직렬화 함수
+ * @param {Number} packetType
+ * @param {Number} sequence
+ * @param {Object} payload
+ * @returns { Buffer } 헤더와 페이로드가 합쳐진 패킷
+ */
+export const serialize = (packetType, version, sequence, payload) => {
+  const versionBuffer = Buffer.from(version, 'utf-8'); // 버전 문자열을 버퍼로 변환
   const versionLength = versionBuffer.length;
   const payloadLength = payload.length;
   const buffer = Buffer.alloc(TOTAL_HEADER_LENGTH);

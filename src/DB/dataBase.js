@@ -40,9 +40,9 @@ const createPoolRedis = () => {
     const date = new Date();
     const commandName = command?.name || 'Unknown Command';
     const formattedArgs = args.length ? `, ${JSON.stringify(args)}` : '';
-    console.log(
-      `[${formatDate(date)}] ${Config.DATA_BASE.GAME_DATABASE_REDIS.NAME} Excuting query: ${commandName}${formattedArgs}`,
-    );
+    // console.log(
+    //   `[${formatDate(date)}] ${Config.DATA_BASE.GAME_DATABASE_REDIS.NAME} Excuting query: ${commandName}${formattedArgs}`,
+    // );
     return originalSendCommand.call(this, command, ...args);
   };
   return redisClient;

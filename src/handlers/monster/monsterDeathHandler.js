@@ -31,11 +31,18 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     // 찾은 socketId로 connectedSockets에 조회하여 찾음
     const enemySocket = connectedSockets.get(socketId);
 
-    enemySocket.write(createResponse(PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION, 0, gamePacket));
+    enemySocket.write(
+      createResponse(
+        PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION,
+        socket.version,
+        socket.seqeunce,
+        gamePacket,
+      ),
+    );
     const buffer = await stateSyncNotification(socket);
     socket.write(buffer);
     // 여기 어떤 값을 적어야 하는지 잘 모르겠음
   } catch (error) {
-    throw new Error('몬스터 Death 처리 중 에러 발생', error);
+    console.error(`몬스터 처치 처리 중 에러 발생: ${error}`);
   }
 };
