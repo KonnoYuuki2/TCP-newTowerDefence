@@ -19,3 +19,23 @@ export const createResponse = (packetType, version, sequence, gamePacket) => {
 
   return result_Buffer;
 };
+export const failCodeReturn = (number) => {
+  const protoMessages = getProtoMessages();
+  const failCode = protoMessages.failCode.GlobalFailCode;
+  let result;
+  switch (number) {
+    case 0:
+      result = failCode.NONE;
+      break;
+    case 1:
+      result = failCode.UNKNOWN_ERROR;
+      break;
+    case 2:
+      result = failCode.INVALID_REQUEST;
+      break;
+    case 3:
+      result = failCode.AUTHENTICATION_FAILED;
+      break;
+  }
+  return result;
+};

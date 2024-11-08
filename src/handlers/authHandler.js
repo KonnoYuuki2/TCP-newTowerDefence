@@ -1,5 +1,5 @@
 import { createUser, findUser } from '../DB/user/user.db.js';
-import { createResponse } from '../utils/response/createResponse.js';
+import { createResponse, failCodeReturn } from '../utils/response/createResponse.js';
 import { PacketType } from '../constants/header.js';
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,10 +8,8 @@ import Config from '../config/config.js';
 import { connectedSockets } from '../events/onConnection.js';
 
 const SALTROUNDS = 10;
-
 export const register = async ({ socket, payload }) => {
   //console.dir(payload, { depth: null });
-
   const fieldName = Object.keys(payload)[0];
   if (fieldName === 'registerRequest') {
     const { id, password, email } = payload[fieldName];
@@ -20,26 +18,30 @@ export const register = async ({ socket, payload }) => {
     const isUserRegistered = isEmptyArray(await findUser(id));
     let message = '';
     let isSuccess = false;
+    let failCode = failCodeReturn(0);
+
     if (isEmail && isUserRegistered) {
       const newPassword = await bcrypt.hash(password, SALTROUNDS);
       await createUser(id, uuid, newPassword, email);
-      message = '정상적으로 생성되었습니다.';
+      message = '계정이 정상적으로 생성되었습니다.';
       isSuccess = true;
-      console.log('정상적');
     } else {
       if (!isEmail) {
         message = '이메일 형식이 아닙니다.';
         console.log('이메일 형식 틀림.');
+        failCode = failCodeReturn(3);
       } else if (!isUserRegistered) {
         message = '이미 존재하는 유저입니다.';
         console.log('존재하는 유저 있음.');
+        failCode = failCodeReturn(3);
       }
     }
-
+    // const code = protoMessages.failCode.GlobalFailCode;
+    // failCode = code.encode(failCode);
     const S2CRegisterResponse = {
       success: isSuccess,
       message: message,
-      GlobalFailCode: 'NONE',
+      GlobalFailCode: failCode,
     };
     const gamePacket = {
       registerResponse: S2CRegisterResponse,
@@ -65,8 +67,10 @@ export const login = async ({ socket, payload }) => {
     let isSuccess = false;
     let message = '';
     let token;
+    let failCode = failCodeReturn(0);
     if (isUserRegistered) {
       message = '없는 유저입니다.';
+      failCode = failCodeReturn(3);
     } else {
       const isMatch = await bcrypt.compare(password, sqlUserData[0].password);
       if (isMatch) {
@@ -77,6 +81,7 @@ export const login = async ({ socket, payload }) => {
         isSuccess = true;
       } else {
         message = '비밀번호가 틀렸습니다.';
+        failCode = failCodeReturn(3);
         const token = null;
       }
     }
@@ -90,7 +95,7 @@ export const login = async ({ socket, payload }) => {
       success: isSuccess,
       message: message,
       token: token,
-      failCode: 'NONE',
+      failCode: failCode,
     };
 
     const gamePacket = {
@@ -115,3 +120,5 @@ function isValidEmail(email) {
 function isEmptyArray(arr) {
   return Array.isArray(arr) && arr.length === 0;
 }
+
+function getFailCode(number) {}
