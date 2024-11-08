@@ -29,3 +29,23 @@ export const towerAttackVerifiy = async (towerId, monsterId, userId) => {
     throw new Error(`타워 정보가 존재하지 않습니다.`);
   }
 };
+
+export const addTower = async (socket, payload) => {
+  const { posX, posY } = payload;
+  const towerData = await redis.getUserField(socket.id, UserFields.TOWERS);
+  let towerId;
+
+  if(towerData.length > 0){
+    towerId = towerData[towerData.length - 1].towerId + 1;
+  } else {
+    towerId = 1;
+  }
+
+  const tower = { towerId: towerId, x: posX, y: posY };
+
+  towerData.push(tower);
+
+  await redis.updateUserField(socket.id, UserFields.TOWERS, towerData);
+
+  return tower;
+};
