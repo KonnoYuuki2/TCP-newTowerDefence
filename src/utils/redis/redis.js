@@ -66,6 +66,18 @@ export const redis = {
   },
 
   /**
+   * 게임 세션 삭제
+   * @param {String} gameId
+   */
+  deleteSession: async (gameId) => {
+    try {
+      await redisClient.del(`${GAME_SESSION_PREFIX}:${gameId}`);
+    } catch (error) {
+      console.error(`게임 세션 삭제 중 에러 발생: ${error}`);
+    }
+  },
+
+  /**
    * 유저 게임 데이터 설정
    * @param {String} userId
    * @param {Object} userData
@@ -76,9 +88,9 @@ export const redis = {
       await redisClient.hset(key, {
         userGold: userData.userGold,
         baseHp: userData.baseHp,
-        towerData: JSON.stringify(userData.towerData),
-        monsterData: JSON.stringify(userData.monsterData),
-        level: userData.level,
+        towers: JSON.stringify(userData.towers),
+        monsters: JSON.stringify(userData.monsters),
+        monsterLevel: userData.monsterLevel,
         score: userData.score,
       });
       await redisClient.expire(key, 3600);
@@ -100,9 +112,9 @@ export const redis = {
       return {
         userGold: parseInt(data.userGold),
         baseHp: parseInt(data.baseHp),
-        towerData: JSON.parse(data.towerData),
-        monsterData: JSON.parse(data.monsterData),
-        level: parseInt(data.level),
+        towers: JSON.parse(data.towers),
+        monsters: JSON.parse(data.monsters),
+        monsterLevel: parseInt(data.monsterLevel),
         score: parseInt(data.score),
       };
     } catch (error) {
@@ -122,9 +134,9 @@ export const redis = {
       if (!data) return null;
 
       // 필드에 따라 형 변환
-      if (['userGold', 'baseHp', 'level', 'score'].includes(field)) {
+      if (['userGold', 'baseHp', 'monsterLevel', 'score'].includes(field)) {
         return parseInt(data);
-      } else if (['towerData', 'monsterData'].includes(field)) {
+      } else if (['towers', 'monsters'].includes(field)) {
         return JSON.parse(data);
       }
 
@@ -200,4 +212,11 @@ export const redis = {
       console.error(`매치 큐의 유저 삭제 중 에러 발생: ${error}`);
     }
   },
+};
+
+export const deleteData = async (socket) => {
+  // 게임 세션 삭제
+  await redis.deleteSession(socket.gameId);
+  // 유저 데이터 삭제
+  await redis.deleteUserData(socket.id);
 };
