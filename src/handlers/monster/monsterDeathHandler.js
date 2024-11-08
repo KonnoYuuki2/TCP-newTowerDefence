@@ -7,9 +7,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 export const monsterDeathHandler = async ({ socket, payload }) => {
   try {
-    const fieldName = Object.keys(payload)[0];
-
-    const { monsterId } = payload[fieldName];
+    const { monsterId } = payload;
 
     // await monsterDeath(socket, monsterId);
 
