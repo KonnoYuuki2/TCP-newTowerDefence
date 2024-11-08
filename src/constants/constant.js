@@ -6,3 +6,5 @@ export const UserFields = {
   LEVEL: 'level',
   SCORE: 'score',
 };
+
+export const MAX_SEQUENCE_DIFF = 5;
