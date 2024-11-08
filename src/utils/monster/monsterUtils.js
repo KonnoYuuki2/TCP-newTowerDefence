@@ -5,6 +5,7 @@ import { redis } from '../redis/redis.js';
 export const spawnMonster = async (socket) => {
   try {
     let monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
+    const monsterLevel = await redis.getUserField(socket.id, UserFields.MONSTER_LEVEL);
     if (monsterData == null) {
       monsterData = [];
     }
@@ -24,7 +25,7 @@ export const spawnMonster = async (socket) => {
 
     let monsterNumber = Math.floor(Math.random() * 4) + 1;
 
-    const spawnMonster = { monsterId: monsterId, monsterNumber: monsterNumber };
+    const spawnMonster = { monsterId, monsterNumber, monsterLevel };
 
     monsterData.push(spawnMonster);
 
@@ -43,9 +44,7 @@ export const monsterDeath = async (socket, monsterId) => {
 
     for (let i = 0; i < monsterData.length; i++) {
       if (monsterData[i].monsterId === monsterId) {
-        console.log(`지우기 전`, monsterData);
         monsterData.splice(i, 1);
-        console.log(`지워진 몬스터 데이터`, monsterData);
         break;
       }
     }
