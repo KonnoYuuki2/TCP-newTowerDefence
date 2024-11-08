@@ -43,32 +43,6 @@ export const spawnMonsterRequest = async ({ socket, payload }) => {
       createResponse(PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, 0, enemySpawnPacket),
     );
   } catch (error) {
-    throw new Error('몬스터 생성 요청중 에러 발생', error);
+    console.error(`몬스터 생성 요청중 에러 발생: ${error}`);
   }
 };
-
-// export const spawnMonsterResponse = async (socket, payload) => {
-//   try {
-//     const { monsterId, monsterNumber } = payload;
-
-//     socket.write(createS2CSpawnMonsterNotification(monsterId, monsterNumber));
-//     // 해당 유저의 소켓에 적기
-//   } catch (error) {
-//     throw new Error('몬스터 생성 응답중 에러 발생', error);
-//   }
-// };
-// request에서 response를 반납하기 때문에 주석처리
-
-// export const enemySpawnMonsterNotification = async (socket, payload) => {
-//   try {
-//     const { monsterId, monsterNumber } = payload;
-
-//     const getEnemySocket = getEnemySocket(socket);
-//     // 상대 소켓을 구하기
-
-//     getEnemySocket.write(createS2CEnemySpawnMonsterNotification(monsterId, monsterNumber));
-//   } catch (error) {
-//     throw new Error('상대 몬스터 생성 중 에러 발생', error);
-//   }
-// };
-// 미완성 코드

@@ -36,6 +36,6 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     socket.write(buffer);
     // 여기 어떤 값을 적어야 하는지 잘 모르겠음
   } catch (error) {
-    throw new Error('몬스터 Death 처리 중 에러 발생', error);
+    console.error(`몬스터 처치 처리 중 에러 발생: ${error}`);
   }
 };

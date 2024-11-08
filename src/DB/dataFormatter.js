@@ -1,3 +1,8 @@
+/**
+ * 날짜의 포맷을 변경하는 함수
+ * @param {Date} date
+ * @returns {String} 년:월:일 시:분:초
+ */
 export function formatDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');

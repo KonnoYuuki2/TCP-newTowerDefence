@@ -2,6 +2,12 @@ import Config from '../config/config.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { deserialize } from '../utils/serializer/serialize.js';
 import { handler } from '../handlers/index.js';
+
+/**
+ * 클라이언트로부터 받은 패킷을 처리하는 함수
+ * @param {Socket} socket
+ * @returns
+ */
 const onData = (socket) => async (data) => {
   // 버퍼를 조금씩 받는 것
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -24,18 +30,13 @@ const onData = (socket) => async (data) => {
       const packet = socket.buffer.subarray(deserializeData.offset, requiredLength);
       socket.buffer = socket.buffer.subarray(requiredLength);
 
-      // 0x0a (줄바꿈) , 0x0d (캐리지 리턴) 붙어서 +2 되어있음
-      // 실제 페이로드는 헤더 + \n, \0 을 제외한 길이
-
       try {
         const payload = packetParser(packet);
-        // console.log('payload', payload);
 
         await handler(socket, deserializeData.packetType, payload);
-        //console.log('탈출');
         break;
       } catch (error) {
-        throw new Error(`패킷 변환중 에러 발생`, error);
+        console.error(`패킷 변환중 에러 발생: ${error}`);
       }
     }
   }

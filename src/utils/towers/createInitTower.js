@@ -1,3 +1,8 @@
+/**
+ * 랜덤한 위치에 타워를 배치하는 함수
+ * @returns { x, y }
+ * @author x 0 ~ 1350, y 300에서 오차 100 범위 내의 랜덤한 위치를 선정하는 함수
+ */
 export function getRandomPositionNearLine() {
   const start = { x: 50, y: 300 }; // 시작점
   const end = { x: 1350, y: 300 }; // 끝점
