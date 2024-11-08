@@ -1,10 +1,8 @@
-import { getProtoMessages } from '../init/loadProtos.js';
+import path from '../utils/path/createPath.js';
 import { redis } from '../utils/redis/redis.js';
+import { getRandomPositionNearLine } from '../utils/towers/createInitTower.js';
 
-export const createMatchStartNotification = async (player1Socket, player2Socket) => {
-  const protoMessages = getProtoMessages();
-  const GamePacket = protoMessages.packets.GamePacket;
-
+export const createUserData = async (userId) => {
   // 초기 게임 상태 설정
   const initialGameState = {
     baseHp: 100,
@@ -13,33 +11,63 @@ export const createMatchStartNotification = async (player1Socket, player2Socket)
     monsterSpawnInterval: 50,
   };
 
+  const towers1 = [];
+  for (let i = 0; i < 3; i++) {
+    const towerPosition = getRandomPositionNearLine();
+    const towerId = i + 1;
+    towers1.push({ towerId, ...towerPosition });
+  }
+
   // 플레이어 데이터 설정
   const playerData = {
-    gold: initialGameState.initialGold,
+    userGold: initialGameState.initialGold,
     base: { hp: initialGameState.baseHp, maxHp: initialGameState.baseHp },
     highScore: 0,
-    towers: [
-      { towerId: 1, x: 500, y: 350 },
-      { towerId: 2, x: 550, y: 300 },
-      { towerId: 3, x: 450, y: 250 },
-    ],
+    towers: [...towers1],
     monsters: [
-      { monsterId: 1, monsterNumber: 1 },
-      { monsterId: 2, monsterNumber: 2 },
+      // { monsterId: 1, monsterNumber: 1 },
+      // { monsterId: 2, monsterNumber: 2 },
     ],
     monsterLevel: 1,
     score: 0,
-    monsterPath: [
-      { x: 0, y: 300 },
-      { x: 1500, y: 300 },
-    ],
+    monsterPath: [...path],
     basePosition: { x: 1350, y: 300 },
   };
 
-  const packet = {
+  const towers2 = [];
+  for (let i = 3; i < 6; i++) {
+    const towerPosition = getRandomPositionNearLine();
+    const towerId = i + 1;
+    towers2.push({ towerId, ...towerPosition });
+  }
+
+  const opponentData = {
+    userGold: initialGameState.initialGold,
+    base: { hp: initialGameState.baseHp, maxHp: initialGameState.baseHp },
+    highScore: 0,
+    towers: [...towers2],
+    monsters: [
+      // { monsterId: 1, monsterNumber: 1 },
+      // { monsterId: 2, monsterNumber: 2 },
+    ],
+    monsterLevel: 1,
+    score: 0,
+    monsterPath: [...path],
+    basePosition: { x: 1350, y: 300 },
+  };
+
+  const packet1 = {
     matchStartNotification: {
       initialGameState: initialGameState,
       playerData: playerData,
+      opponentData: opponentData,
+    },
+  };
+
+  const packet2 = {
+    matchStartNotification: {
+      initialGameState: initialGameState,
+      playerData: opponentData,
       opponentData: playerData,
     },
   };
@@ -53,8 +81,8 @@ export const createMatchStartNotification = async (player1Socket, player2Socket)
     score: playerData.score,
   };
 
-  await redis.setUserData(player1Socket.id, userData);
-  await redis.setUserData(player2Socket.id, userData);
+  await redis.setUserData(userId, userData);
+  await redis.setUserData(userId, userData);
 
-  return GamePacket.encode(packet).finish();
+  return { packet1, packet2 };
 };

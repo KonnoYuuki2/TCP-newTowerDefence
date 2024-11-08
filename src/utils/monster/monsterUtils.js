@@ -3,21 +3,24 @@ import { redis } from '../redis/redis.js';
 
 // 몬스터데이터 리스트에 새로운 몬스터아이디를 가진 객체를 생성해서 배열에 추가
 export const spawnMonster = async (socket) => {
-  const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
-
-  let monsterId = 1;
-  let monsterNumber = Math.floor(Math.random() * 4) + 1;
-  if (monsterData.length) {
-    monsterId += monsterData[monsterData.length - 1].monsterId;
-    monsterNumber += monsterData[monsterData.length - 1].monsterNumber;
+  let monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
+  if (monsterData == null) {
+    monsterData = [];
   }
-  // 잘못된 접근방식입니다. 지금 방식이 생각이 안나서
-  // 몬스터가 존재할 때 가장 높은 Id와 Number를 가진 몬스터에서 +1을 하도록 했는데
-  // 그냥 매 생성마다 +1을 하도록 짜야함
+
+  let monsterId;
+  let monsterNumber = Math.floor(Math.random() * 4) + 1;
+  if (monsterData.length > 0) {
+    monsterId = monsterData[monsterData.length - 1].monsterId + 1;
+  } else {
+    monsterId = 1;
+  }
 
   const spawnMonster = { monsterId: monsterId, monsterNumber: monsterNumber };
+  console.log('spawnMonster', spawnMonster);
 
   monsterData.push(spawnMonster);
+  console.log('monsterData', monsterData);
 
   await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
 
@@ -31,6 +34,8 @@ export const monsterDeath = async (socket, monsterId) => {
   for (let i = 0; i < monsterData.length; i++) {
     if (monsterData[i].monsterId === monsterId) {
       monsterData.splice(i, 1);
+      console.log(`지워진 몬스터 데이터`, monsterData);
+      break;
     }
   }
 

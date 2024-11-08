@@ -1,23 +1,17 @@
 import { PacketType } from '../../constants/header.js';
 import { connectedSockets } from '../../events/onConnection.js';
-import { monsterDeath } from '../../utils/monster/monsterUtils.js';
 import { redis } from '../../utils/redis/redis.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
-export const monsterDeathHandler = async ({ socket, payload }) => {
+export const towerAttackHandler = async ({ socket, payload }) => {
   try {
     const fieldName = Object.keys(payload)[0];
 
-    const { monsterId } = payload[fieldName];
+    const { towerId, monsterId } = payload[fieldName];
 
-    await monsterDeath(socket, monsterId);
-
-    const S2CMonsterDeathNotification = {
-      monsterId: monsterId,
-    };
-    const gamePacket = {
-      monsterDeathNotification: S2CMonsterDeathNotification,
-    };
+    // 타워, 몬스터 유무 검증
+    await towerAttackVerifiy(towerId, monsterId, socket.id);
 
     // 모든 유저 정보 가져옴
     const users = await redis.getUsers(socket.gameId);
@@ -30,9 +24,12 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     // 찾은 socketId로 connectedSockets에 조회하여 찾음
     const enemySocket = connectedSockets.get(socketId);
 
-    enemySocket.write(createResponse(PacketType.MONSTER_DEATH_NOTIFICATION, 0, gamePacket));
-    // 여기 어떤 값을 적어야 하는지 잘 모르겠음
+    const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
+
+    enemySocket.write(
+      createResponse(PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION, 0, towerAttackPacket),
+    );
   } catch (error) {
-    throw new Error('몬스터 Death 처리 중 에러 발생', error);
+    throw new Error(`타워 공격 정보 처리중 에러 발생`, error);
   }
 };

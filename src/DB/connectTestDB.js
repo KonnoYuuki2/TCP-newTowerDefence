@@ -42,7 +42,7 @@ const testRedis = async () => {
 const testAllConnections = async (pools) => {
   await testDbConnection(pools.USER_DATABASE_SQL, 'USER_DB', 'sql');
   await testDbConnection(pools.GAME_DATABASE_REDIS, 'GAME_DB', 'redis');
-  await testRedis();
+  // await testRedis();
 };
 
 export { testDbConnection, testAllConnections };
