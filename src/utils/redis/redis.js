@@ -88,8 +88,8 @@ export const redis = {
       await redisClient.hset(key, {
         userGold: userData.userGold,
         baseHp: userData.baseHp,
-        towerData: JSON.stringify(userData.towerData),
-        monsterData: JSON.stringify(userData.monsterData),
+        towers: JSON.stringify(userData.towers),
+        monsters: JSON.stringify(userData.monsters),
         monsterLevel: userData.monsterLevel,
         score: userData.score,
       });
@@ -112,9 +112,9 @@ export const redis = {
       return {
         userGold: parseInt(data.userGold),
         baseHp: parseInt(data.baseHp),
-        towerData: JSON.parse(data.towerData),
-        monsterData: JSON.parse(data.monsterData),
-        monsterLevel: parseInt(data.level),
+        towers: JSON.parse(data.towers),
+        monsters: JSON.parse(data.monsters),
+        monsterLevel: parseInt(data.monsterLevel),
         score: parseInt(data.score),
       };
     } catch (error) {
@@ -136,7 +136,7 @@ export const redis = {
       // 필드에 따라 형 변환
       if (['userGold', 'baseHp', 'monsterLevel', 'score'].includes(field)) {
         return parseInt(data);
-      } else if (['towerData', 'monsterData'].includes(field)) {
+      } else if (['towers', 'monsters'].includes(field)) {
         return JSON.parse(data);
       }
 

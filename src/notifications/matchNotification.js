@@ -76,18 +76,18 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
     const userData1 = {
       userGold: playerData.userGold,
       baseHp: playerData.base.maxHp,
-      towerData: playerData.towers,
-      monsterData: playerData.monsters,
-      level: playerData.monsterLevel,
+      towers: playerData.towers,
+      monsters: playerData.monsters,
+      monsterLevel: playerData.monsterLevel,
       score: playerData.score,
     };
 
     const userData2 = {
       userGold: opponentData.userGold,
       baseHp: opponentData.base.maxHp,
-      towerData: opponentData.towers,
-      monsterData: opponentData.monsters,
-      level: opponentData.monsterLevel,
+      towers: opponentData.towers,
+      monsters: opponentData.monsters,
+      monsterLevel: opponentData.monsterLevel,
       score: opponentData.score,
     };
 

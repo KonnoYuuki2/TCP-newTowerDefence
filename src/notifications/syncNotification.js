@@ -16,13 +16,14 @@ export const stateSyncNotification = async (socket) => {
       baseHp: userData.baseHp,
       monsterLevel: userData.monsterLevel,
       score: userData.score,
-      towerData: userData.towerData,
-      monsterData: userData.monsterData,
+      towers: userData.towers,
+      monsters: userData.monsters,
     };
 
     const gamePacket = {
       stateSyncNotification: S2CStateSyncNotification,
     };
+    console.log(gamePacket);
 
     const buffer = createResponse(
       HANDLER_IDS.STATE_SYNC_NOTIFICATION,
