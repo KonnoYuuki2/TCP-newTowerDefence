@@ -6,9 +6,7 @@ import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
 export const towerAttackHandler = async ({ socket, payload }) => {
   try {
-    const fieldName = Object.keys(payload)[0];
-
-    const { towerId, monsterId } = payload[fieldName];
+    const { towerId, monsterId } = payload;
 
     // 타워, 몬스터 유무 검증
     await towerAttackVerifiy(towerId, monsterId, socket.id);
