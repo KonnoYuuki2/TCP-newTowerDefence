@@ -5,6 +5,7 @@ export const UserFields = {
   MONSTERS: 'monsters',
   MONSTER_LEVEL: 'monsterLevel',
   SCORE: 'score',
+  HIGHSCORE: 'highScore',
 };
 
 export const MAX_SEQUENCE_DIFF = 5;

@@ -1,5 +1,5 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
-import { towerAttackHandler } from './towers/towerAttack.js';
+import { towerAttackHandler } from './towers/towerAttackHandler.js';
 import { matchRequestHandler } from './match/matchHandler.js';
 import { register, login } from './authHandler.js';
 import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
