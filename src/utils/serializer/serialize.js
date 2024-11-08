@@ -34,8 +34,8 @@ export const deserialize = async (socket) => {
  * @param {Object} payload
  * @returns { Buffer } 헤더와 페이로드가 합쳐진 패킷
  */
-export const serialize = (packetType, sequence, payload) => {
-  const versionBuffer = Buffer.from(Config.SERVER.VERSION, 'utf-8'); // 버전 문자열을 버퍼로 변환
+export const serialize = (packetType, version, sequence, payload) => {
+  const versionBuffer = Buffer.from(version, 'utf-8'); // 버전 문자열을 버퍼로 변환
   const versionLength = versionBuffer.length;
   const payloadLength = payload.length;
   const buffer = Buffer.alloc(TOTAL_HEADER_LENGTH);

@@ -44,7 +44,12 @@ export const register = async ({ socket, payload }) => {
     const gamePacket = {
       registerResponse: S2CRegisterResponse,
     };
-    const result = createResponse(PacketType.REGISTER_RESPONSE, 0, gamePacket);
+    const result = createResponse(
+      PacketType.REGISTER_RESPONSE,
+      socket.version,
+      socket.sequence,
+      gamePacket,
+    );
     //console.log(result);
     socket.write(result);
   }
@@ -87,11 +92,18 @@ export const login = async ({ socket, payload }) => {
       token: token,
       failCode: 'NONE',
     };
+
     const gamePacket = {
       loginResponse: S2CLoginResponse,
     };
-    const result = createResponse(PacketType.LOGIN_RESPONSE, 0, gamePacket);
-    //console.log(result);
+
+    const result = createResponse(
+      PacketType.LOGIN_RESPONSE,
+      socket.version,
+      socket.sequence,
+      gamePacket,
+    );
+
     socket.write(result);
   }
 };
