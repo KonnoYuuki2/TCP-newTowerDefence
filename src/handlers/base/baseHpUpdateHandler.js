@@ -1,5 +1,6 @@
 import { PacketType } from '../../constants/header.js';
 import { connectedSockets } from '../../events/onConnection.js';
+import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { baseHpVerify } from '../../utils/base/baseUtils.js';
 import { redis } from '../../utils/redis/redis.js';
 
@@ -16,6 +17,7 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
 
     let oppoSocketId;
     let hostSocketId;
+
     users.forEach((user) => {
       if (user === socket.id) {
         hostSocketId = user;
@@ -23,6 +25,7 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
         oppoSocketId = user;
       }
     });
+
     const hostSocket = connectedSockets.get(hostSocketId);
     const oppoSocket = connectedSockets.get(oppoSocketId);
 
@@ -39,8 +42,26 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
       updateBaseHpNotification: { isOpponent: true, basehp },
     };
 
-    hostSocket.write(createResponse(PacketType.UPDATE_BASE_HP_NOTIFICATION, 0, hostGamePacket));
-    oppoSocket.write(createResponse(PacketType.UPDATE_BASE_HP_NOTIFICATION, 0, oppoGamePacket));
+    hostSocket.write(
+      createResponse(
+        PacketType.UPDATE_BASE_HP_NOTIFICATION,
+        hostSocket.version,
+        hostSocket.sequence,
+        hostGamePacket,
+      ),
+    );
+
+    oppoSocket.write(
+      createResponse(
+        PacketType.UPDATE_BASE_HP_NOTIFICATION,
+        oppoSocket.version,
+        oppoSocket.sequence,
+        oppoGamePacket,
+      ),
+    );
+
+    const buffer = await stateSyncNotification(hostSocket);
+    hostSocket.write(buffer);
 
     // 게임 오버
     if (basehp > 0) {
@@ -56,8 +77,23 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
         gameOverNotification: { isWin: true },
       };
 
-      hostSocket.write(createResponse(PacketType.GAME_OVER_NOTIFICATION, 0, hostOverPacket));
-      oppoSocket.write(createResponse(PacketType.GAME_OVER_NOTIFICATION, 0, oppoOverPacket));
+      hostSocket.write(
+        createResponse(
+          PacketType.GAME_OVER_NOTIFICATION,
+          hostSocket.version,
+          hostSocket.sequence,
+          hostOverPacket,
+        ),
+      );
+
+      oppoSocket.write(
+        createResponse(
+          PacketType.GAME_OVER_NOTIFICATION,
+          oppoSocket.version,
+          oppoSocket.sequence,
+          oppoOverPacket,
+        ),
+      );
     }
   } catch (error) {
     throw new Error(`몬스터 베이스 어택 처리 중 에러 발생`, error);

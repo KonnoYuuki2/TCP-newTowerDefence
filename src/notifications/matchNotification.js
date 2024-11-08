@@ -35,7 +35,7 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
       monsterLevel: 1,
       score: 0,
       monsterPath: [...path],
-      basePosition: { x: 1350, y: 300 },
+      basePosition: { x: 1425, y: 300 },
     };
 
     const towers2 = [];
@@ -54,7 +54,7 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
       monsterLevel: 1,
       score: 0,
       monsterPath: [...path],
-      basePosition: { x: 1350, y: 300 },
+      basePosition: { x: 1425, y: 300 },
     };
 
     const packet1 = {
