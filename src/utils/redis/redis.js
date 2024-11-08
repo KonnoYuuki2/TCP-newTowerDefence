@@ -69,6 +69,22 @@ export const redis = {
     }
   },
 
+  getUserData2: async (userId) => {
+    try {
+      const data = await redisClient.hgetall(`${USER_PREFIX}:${userId}`);
+      if (!data) return null;
+
+      return {
+        userGold: parseInt(data.userGold),
+        baseHp: parseInt(data.baseHp),
+        level: parseInt(data.level),
+        score: parseInt(data.score),
+      };
+    } catch (error) {
+      console.error(`유저 데이터 조회 중 에러 발생: ${error}`);
+    }
+  },
+
   getUserField: async (userId, field) => {
     try {
       const data = await redisClient.hget(`${USER_PREFIX}:${userId}`, field);
