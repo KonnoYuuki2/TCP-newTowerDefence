@@ -1,10 +1,10 @@
 import { redis } from '../../utils/redis/redis.js';
 import { v4 as uuidv4 } from 'uuid';
-import { createMatchStartNotification } from '../../notifications/matchNotification.js';
-import { serialize } from '../../utils/serializer/serialize.js';
+import { createUserData } from '../../notifications/matchNotification.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import Config from '../../config/config.js';
 import { connectedSockets } from '../../events/onConnection.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 export const matchRequestHandler = async ({ socket, payload }) => {
   try {
@@ -33,18 +33,21 @@ export const matchRequestHandler = async ({ socket, payload }) => {
         await redis.addUser(gameId, player2.id);
         console.log('유저 등록');
 
+        player1Socket.gameId = gameId;
+        player2Socket.gameId = gameId;
         // 매치 시작 알림 전송
-        const data = createMatchStartNotification();
+        const { packet1, packet2 } = await createUserData(player1Socket.id, player2Socket.id);
         console.log('페이로드 생성');
 
         const packetType = HANDLER_IDS.MATCH_START_NOTIFICATION;
         const version = Config.CLIENT.VERSION;
         const sequence = 0;
-        const buffer = serialize(packetType, sequence, data);
+        const buffer1 = createResponse(packetType, sequence, packet1);
+        const buffer2 = createResponse(packetType, sequence, packet2);
         console.log('버퍼 생성');
 
-        player1Socket.write(buffer);
-        player2Socket.write(buffer);
+        player1Socket.write(buffer1);
+        player2Socket.write(buffer2);
 
         console.log(`매칭 성공! 플레이어 ${player1.id} vs ${player2.id}`);
       }
