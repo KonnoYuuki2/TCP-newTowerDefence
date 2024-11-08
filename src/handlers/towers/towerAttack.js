@@ -32,6 +32,6 @@ export const towerAttackHandler = async ({ socket, payload }) => {
       createResponse(PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION, 0, towerAttackPacket),
     );
   } catch (error) {
-    throw new Error(`타워 공격 정보 처리중 에러 발생`, error);
+    console.error(`타워 공격 정보 처리중 에러 발생: ${error}`);
   }
 };
