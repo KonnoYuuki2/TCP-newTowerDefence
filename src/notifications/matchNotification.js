@@ -2,7 +2,7 @@ import path from '../utils/path/createPath.js';
 import { redis } from '../utils/redis/redis.js';
 import { getRandomPositionNearLine } from '../utils/towers/createInitTower.js';
 
-export const createUserData = async (userId) => {
+export const createUserData = async (userId1, userId2) => {
   // 초기 게임 상태 설정
   const initialGameState = {
     baseHp: 100,
@@ -72,7 +72,7 @@ export const createUserData = async (userId) => {
     },
   };
 
-  const userData = {
+  const userData1 = {
     userGold: playerData.userGold,
     baseHp: playerData.base.maxHp,
     towerData: playerData.towers,
@@ -81,8 +81,17 @@ export const createUserData = async (userId) => {
     score: playerData.score,
   };
 
-  await redis.setUserData(userId, userData);
-  await redis.setUserData(userId, userData);
+  const userData2 = {
+    userGold: opponentData.userGold,
+    baseHp: opponentData.base.maxHp,
+    towerData: opponentData.towers,
+    monsterData: opponentData.monsters,
+    level: opponentData.monsterLevel,
+    score: opponentData.score,
+  };
+
+  await redis.setUserData(userId1, userData1);
+  await redis.setUserData(userId2, userData2);
 
   return { packet1, packet2 };
 };

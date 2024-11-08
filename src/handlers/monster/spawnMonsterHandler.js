@@ -23,8 +23,24 @@ export const spawnMonsterRequest = async ({ hostsocket, opposocket }) => {
       spawnEnemyMonsterNotification: SpawnMonster,
     };
 
-    hostsocket.write(createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket));
-    opposocket.write(
+    const users = await redis.getUsers(socket.gameId);
+
+    let hostSocketId;
+    let oppoSocketId;
+
+    users.forEach((user) => {
+      if (user === socket.id) {
+        hostSocketId = user;
+      } else {
+        oppoSocketId = user;
+      }
+    });
+
+    const hostSocket = connectedSockets.get(hostSocketId);
+    const oppoSocket = connectedSockets.get(oppoSocketId);
+
+    hostSocket.write(createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket));
+    oppoSocket.write(
       createResponse(PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, 0, enemySpawnPacket),
     );
   } catch (error) {

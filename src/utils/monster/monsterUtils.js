@@ -8,19 +8,17 @@ export const spawnMonster = async (socket) => {
     monsterData = [];
   }
 
-  let monsterId;
+  let monsterId = Math.floor(Math.random() * 210000000);
   let monsterNumber = Math.floor(Math.random() * 4) + 1;
-  if (monsterData.length > 0) {
-    monsterId = monsterData[monsterData.length - 1].monsterId + 1;
-  } else {
-    monsterId = 1;
-  }
+  // if (monsterData.length > 0) {
+  //   monsterId = monsterData[monsterData.length - 1].monsterId + 1;
+  // } else {
+  //   monsterId = 1;
+  // }
 
   const spawnMonster = { monsterId: monsterId, monsterNumber: monsterNumber };
-  console.log('spawnMonster', spawnMonster);
 
   monsterData.push(spawnMonster);
-  console.log('monsterData', monsterData);
 
   await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
 
