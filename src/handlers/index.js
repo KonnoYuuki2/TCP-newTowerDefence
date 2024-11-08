@@ -5,6 +5,7 @@ import { register, login } from './authHandler.js';
 import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
 import { monsterDeathHandler } from './monster/monsterDeathHandler.js';
 import { baseHpUpdateHandler } from './base/baseHpUpdateHandler.js';
+import { towerPurchaseHandler } from './towers/towerPurchaseHandler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -36,7 +37,7 @@ const packetTypes = {
     protoType: 'S2CStateSyncNotification',
   },
   [HANDLER_IDS.TOWER_PURCHASE_REQUEST]: {
-    packetType: undefined,
+    packetType: towerPurchaseHandler,
     protoType: 'C2STowerPurchaseRequest',
   },
   [HANDLER_IDS.TOWER_PURCHASE_RESPONSE]: {
