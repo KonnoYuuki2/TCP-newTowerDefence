@@ -1,5 +1,6 @@
 import { PacketType } from '../../constants/header.js';
 import { connectedSockets } from '../../events/onConnection.js';
+import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { monsterDeath } from '../../utils/monster/monsterUtils.js';
 import { redis } from '../../utils/redis/redis.js';
 import { createResponse } from '../../utils/response/createResponse.js';
@@ -31,7 +32,8 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     const enemySocket = connectedSockets.get(socketId);
 
     enemySocket.write(createResponse(PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION, 0, gamePacket));
-    // stateSyncNotification(socket);
+    const buffer = await stateSyncNotification(socket);
+    socket.write(buffer);
     // 여기 어떤 값을 적어야 하는지 잘 모르겠음
   } catch (error) {
     throw new Error('몬스터 Death 처리 중 에러 발생', error);
