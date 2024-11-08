@@ -12,14 +12,12 @@ export const spawnMonster = async (socket) => {
   } else {
     monsterId = 1;
   }
-  // 잘못된 접근방식입니다. 지금 방식이 생각이 안나서
-  // 몬스터가 존재할 때 가장 높은 Id와 Number를 가진 몬스터에서 +1을 하도록 했는데
-  // 그냥 매 생성마다 +1을 하도록 짜야함
 
   const spawnMonster = { monsterId: monsterId, monsterNumber: monsterNumber };
 
   monsterData.push(spawnMonster);
 
+  console.log(monsterData);
   await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
 
   return spawnMonster;
