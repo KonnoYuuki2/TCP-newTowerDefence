@@ -8,7 +8,18 @@ export const spawnMonster = async (socket) => {
     monsterData = [];
   }
 
-  let monsterId = Math.floor(Math.random() * 210000000);
+  const users = await redis.getUsers(socket.gameId);
+  let monsterId = 0;
+
+  let lastId;
+  if (monsterData.length > 0) {
+    lastId = Math.max(...monsterData.map((el) => el.monsterId));
+  } else {
+    lastId = users[0] === socket.id ? 0 : 100000;
+  }
+
+  monsterId = ++lastId;
+
   let monsterNumber = Math.floor(Math.random() * 4) + 1;
   // if (monsterData.length > 0) {
   //   monsterId = monsterData[monsterData.length - 1].monsterId + 1;
