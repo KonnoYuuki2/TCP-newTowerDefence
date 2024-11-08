@@ -29,7 +29,12 @@ export const towerAttackHandler = async ({ socket, payload }) => {
     };
 
     enemySocket.write(
-      createResponse(PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION, 0, towerAttackPacket),
+      createResponse(
+        PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION,
+        enemySocket.version,
+        enemySocket.sequence,
+        towerAttackPacket,
+      ),
     );
   } catch (error) {
     console.error(`타워 공격 정보 처리중 에러 발생: ${error}`);

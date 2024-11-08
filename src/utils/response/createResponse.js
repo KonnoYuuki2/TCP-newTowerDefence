@@ -8,14 +8,14 @@ import { serialize } from '../serializer/serialize.js';
  * @param {GamePacket} gamePacket - 객체{ 객체:{ 데이터 ...}}
  * @returns {Buffer}
  */
-export const createResponse = (packetType, sequence, gamePacket) => {
+export const createResponse = (packetType, version, sequence, gamePacket) => {
   const protoMessages = getProtoMessages();
 
   const Response = protoMessages.packets.GamePacket;
 
   const payload = Response.encode(gamePacket).finish();
 
-  const result_Buffer = serialize(packetType, sequence, payload);
+  const result_Buffer = serialize(packetType, version, sequence, payload);
 
   return result_Buffer;
 };

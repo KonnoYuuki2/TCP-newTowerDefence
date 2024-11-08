@@ -102,12 +102,12 @@ const packetTypes = {
 export const handler = async (socket, packetType, payload) => {
   try {
     if (!packetType) {
-      console.error(`핸들러를 찾을 수 없습니다: ID ${packetType}:`, error);
+      console.log(`핸들러를 찾을 수 없습니다: ID ${packetType}:`);
     }
 
     const handlerFunction = packetTypes[packetType].packetType;
     if (!handlerFunction) {
-      console.error(`패킷 타입 ${packetType}에 대한 핸들러가 없습니다.:`, error);
+      console.log(`패킷 타입 ${packetType}에 대한 핸들러가 없습니다.:`);
     }
 
     await handlerFunction({ socket, payload });

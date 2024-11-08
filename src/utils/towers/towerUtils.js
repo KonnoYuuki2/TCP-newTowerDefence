@@ -1,4 +1,4 @@
-import { UserFields } from '../../constants/enum.js';
+import { UserFields } from '../../constants/constant.js';
 import { redis } from '../redis/redis.js';
 
 export const getTower = async (towerId, userId) => {

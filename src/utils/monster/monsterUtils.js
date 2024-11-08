@@ -1,4 +1,4 @@
-import { UserFields } from '../../constants/enum.js';
+import { UserFields } from '../../constants/constant.js';
 import { redis } from '../redis/redis.js';
 
 // 몬스터데이터 리스트에 새로운 몬스터아이디를 가진 객체를 생성해서 배열에 추가

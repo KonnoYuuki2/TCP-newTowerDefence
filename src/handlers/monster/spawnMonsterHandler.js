@@ -38,9 +38,21 @@ export const spawnMonsterRequest = async ({ socket, payload }) => {
     const hostSocket = connectedSockets.get(hostSocketId);
     const oppoSocket = connectedSockets.get(oppoSocketId);
 
-    hostSocket.write(createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket));
+    hostSocket.write(
+      createResponse(
+        PacketType.SPAWN_MONSTER_RESPONSE,
+        hostSocket.version,
+        hostSocket.sequence,
+        gamePacket,
+      ),
+    );
     oppoSocket.write(
-      createResponse(PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, 0, enemySpawnPacket),
+      createResponse(
+        PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION,
+        oppoSocket.version,
+        oppoSocket.sequence,
+        enemySpawnPacket,
+      ),
     );
   } catch (error) {
     console.error(`몬스터 생성 요청중 에러 발생: ${error}`);

@@ -24,7 +24,12 @@ export const stateSyncNotification = async (socket) => {
       stateSyncNotification: S2CStateSyncNotification,
     };
 
-    const buffer = createResponse(HANDLER_IDS.STATE_SYNC_NOTIFICATION, 0, gamePacket);
+    const buffer = createResponse(
+      HANDLER_IDS.STATE_SYNC_NOTIFICATION,
+      socket.version,
+      socket.sequence,
+      gamePacket,
+    );
 
     return buffer;
   } catch (error) {
