@@ -24,27 +24,24 @@ export const spawnMonsterRequest = async ({ socket, payload }) => {
 
     const users = await redis.getUsers(socket.gameId);
 
-    let enemyUser;
-    let socketUser;
+    let hostSocketId;
+    let oppoSocketId;
 
     users.forEach((user) => {
       if (user === socket.id) {
-        socketUser = user;
+        hostSocketId = user;
       } else {
-        enemyUser = user;
+        oppoSocketId = user;
       }
     });
 
-    // 각 유저의 소켓마다 다른 패킷 전송
-    connectedSockets.forEach((value, key) => {
-      if (key === socketUser) {
-        value.write(createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket));
-      } else if (key === enemyUser) {
-        value.write(
-          createResponse(PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, 0, enemySpawnPacket),
-        );
-      }
-    });
+    const hostSocket = connectedSockets.get(hostSocketId);
+    const oppoSocket = connectedSockets.get(oppoSocketId);
+
+    hostSocket.write(createResponse(PacketType.SPAWN_MONSTER_RESPONSE, 0, gamePacket));
+    oppoSocket.write(
+      createResponse(PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, 0, enemySpawnPacket),
+    );
   } catch (error) {
     throw new Error('몬스터 생성 요청중 에러 발생', error);
   }
