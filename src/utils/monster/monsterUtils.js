@@ -32,7 +32,8 @@ export const monsterDeath = async (socket, monsterId) => {
   const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
 
   for (let i = 0; i < monsterData.length; i++) {
-    if (monsterData[i].monsterId === monsterId) {
+    if (monsterData[i].monsterId === monsterId) {      
+      console.log(`기존 몬스터 데이터`, monsterData);
       monsterData.splice(i, 1);
       console.log(`지워진 몬스터 데이터`, monsterData);
       break;
