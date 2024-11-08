@@ -66,6 +66,18 @@ export const redis = {
   },
 
   /**
+   * 게임 세션 삭제
+   * @param {String} gameId
+   */
+  deleteSession: async (gameId) => {
+    try {
+      await redisClient.del(`${GAME_SESSION_PREFIX}:${gameId}`);
+    } catch (error) {
+      console.error(`게임 세션 삭제 중 에러 발생: ${error}`);
+    }
+  },
+
+  /**
    * 유저 게임 데이터 설정
    * @param {String} userId
    * @param {Object} userData
@@ -200,4 +212,11 @@ export const redis = {
       console.error(`매치 큐의 유저 삭제 중 에러 발생: ${error}`);
     }
   },
+};
+
+export const deleteData = async (socket) => {
+  // 게임 세션 삭제
+  await redis.deleteSession(socket.gameId);
+  // 유저 데이터 삭제
+  await redis.deleteUserData(socket.id);
 };
