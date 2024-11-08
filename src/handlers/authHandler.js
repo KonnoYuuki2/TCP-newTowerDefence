@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 import Config from '../config/config.js';
+import { connectedSockets } from '../events/onConnection.js';
 
 const SALTROUNDS = 10;
 
@@ -74,6 +75,11 @@ export const login = async ({ socket, payload }) => {
         const token = null;
       }
     }
+
+    // 로그인 시 유저의 uuid를 조회해서 소켓에 id 부여
+    const uuid = sqlUserData[0].uuid;
+    socket.id = uuid;
+    connectedSockets.set(socket.id, socket);
 
     const S2CLoginResponse = {
       success: isSuccess,
