@@ -1,15 +1,24 @@
-import Config from '../config/config.js';
 import HANDLER_IDS from '../constants/handlerIds.js';
 import { redis } from '../utils/redis/redis.js';
 import { createResponse } from '../utils/response/createResponse.js';
 
 export const stateSyncNotification = async (socket) => {
-  const userData = await redis.getUserData2(socket.id);
+  const userData = await redis.getUserData(socket.id);
 
-  const packetType = HANDLER_IDS.STATE_SYNC_NOTIFICATION;
-  const version = Config.CLIENT.VERSION;
-  const sequence = 0;
-  const buffer = createResponse(packetType, sequence, userData);
+  const S2CStateSyncNotification = {
+    userGold: userData.userGold,
+    baseHp: userData.baseHp,
+    monsterLevel: userData.monsterLevel,
+    score: userData.score,
+    towerData: userData.towerData,
+    monsterData: userData.monsterData,
+  };
 
-  socket.write(buffer);
+  const gamePacket = {
+    stateSyncNotification: S2CStateSyncNotification,
+  };
+
+  const buffer = createResponse(HANDLER_IDS.STATE_SYNC_NOTIFICATION, 0, gamePacket);
+
+  return buffer;
 };
