@@ -24,7 +24,9 @@ export const towerAttackHandler = async ({ socket, payload }) => {
     // 찾은 socketId로 connectedSockets에 조회하여 찾음
     const enemySocket = connectedSockets.get(socketId);
 
-    const towerAttackPacket = { enemyTowerAttackNotification: { towerId: 1, monsterId: 1 } };
+    const towerAttackPacket = {
+      enemyTowerAttackNotification: { towerId: towerId, monsterId: monsterId },
+    };
 
     enemySocket.write(
       createResponse(PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION, 0, towerAttackPacket),
