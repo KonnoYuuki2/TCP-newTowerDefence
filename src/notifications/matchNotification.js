@@ -15,7 +15,7 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
       baseHp: 100,
       towerCost: 100,
       initialGold: 1000,
-      monsterSpawnInterval: 50,
+      monsterSpawnInterval: 1000,
     };
 
     const towers1 = [];

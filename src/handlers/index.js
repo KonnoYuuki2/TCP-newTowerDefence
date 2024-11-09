@@ -6,6 +6,7 @@ import { spawnMonsterRequest } from './monster/spawnMonsterHandler.js';
 import { monsterDeathHandler } from './monster/monsterDeathHandler.js';
 import { baseHpUpdateHandler } from './base/baseHpUpdateHandler.js';
 import { towerPurchaseHandler } from './towers/towerPurchaseHandler.js';
+import { gameEndHandler } from './game/gameEndHandler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -81,7 +82,7 @@ const packetTypes = {
     protoType: 'S2CGameOverNotification',
   },
   [HANDLER_IDS.GAME_END_REQUEST]: {
-    packetType: undefined,
+    packetType: gameEndHandler,
     protoType: 'C2SGameEndRequest',
   },
   [HANDLER_IDS.MONSTER_DEATH_NOTIFICATION]: {
