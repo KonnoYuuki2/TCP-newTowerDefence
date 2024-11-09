@@ -53,5 +53,5 @@ export const addTower = async (socket, payload) => {
 
 export const towerPurchaseCalculator = async (socket) => {
   const userGold = await getUserGold(socket);
-  await setUserGold(socket, userGold - 100);
+  await setUserGold(socket, userGold - 1000);
 };

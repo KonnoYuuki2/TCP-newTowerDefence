@@ -1,4 +1,5 @@
 import { UserFields } from '../../constants/constant.js';
+import { getGameAssets } from '../../init/assets.js';
 import { calculateUserGold, getUserGold, setUserGold } from '../gameState/gold/goldUtils.js';
 import { getMonsterLevel, setMonsterLevel } from '../gameState/level/levelUtils.js';
 import { calculateScore, getScore, setScore } from '../gameState/score/scoreUtils.js';
@@ -59,6 +60,8 @@ export const monsterDeath = async (socket, monsterId) => {
 };
 
 export const monsterDeathUpdateGameState = async (socket) => {
+  const { data } = getGameAssets().monsterLevel;
+
   // 몬스터가 죽었을 떄 레벨에 따라서 스코어 증가 및 갱신
   const score = await getScore(socket);
   const monsterLevel = await getMonsterLevel(socket);
@@ -71,7 +74,9 @@ export const monsterDeathUpdateGameState = async (socket) => {
 
   const increasedScore = await getScore(socket);
 
-  if (increasedScore % 100 === 0) {
-    await setMonsterLevel(socket, monsterLevel);
+  const levelData = data.find((el) => el.id === monsterLevel);
+
+  if (increasedScore >= levelData.nextLevel) {
+    if (levelData.id < 6) await setMonsterLevel(socket, monsterLevel);
   }
 };

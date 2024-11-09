@@ -1,4 +1,5 @@
 import { UserFields } from '../../../constants/constant.js';
+import { getGameAssets } from '../../../init/assets.js';
 import { redis } from '../../redis/redis.js';
 
 // 스코어 관련 처리 유틸
@@ -30,5 +31,7 @@ export const setHighScore = async (socket, highScore) => {
 };
 
 export const calculateScore = async (score, level) => {
-  return level * 100 + score;
+  const { data } = getGameAssets().monsterLevel;
+  const amount = data.find((el) => el.id === level);
+  return score + amount.score;
 };
