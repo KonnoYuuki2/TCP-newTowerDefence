@@ -1,10 +1,16 @@
 import { UserFields } from '../../constants/constant.js';
 import { PacketType } from '../../constants/header.js';
+import pools from '../../DB/dataBase.js';
+import { SQL_QUERIES } from '../../DB/user/user.queries.js';
 import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { baseHpVerify } from '../../utils/base/baseUtils.js';
 import { redis } from '../../utils/redis/redis.js';
-import { createResponse } from '../../utils/response/createResponse.js';
-import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
+import {
+  getOppoSocket,
+  getOppoSocketId,
+  hostSocketWrite,
+  oppoSocketWrite,
+} from '../../utils/socket/socketUtils.js';
 
 export const baseHpUpdateHandler = async ({ socket, payload }) => {
   try {
@@ -43,6 +49,18 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
       const oppoOverPacket = {
         gameOverNotification: { isWin: true },
       };
+
+      const host = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_USER_BY_UUID, socket.id);
+
+      const oppoSocketId = await getOppoSocketId(socket);
+
+      const oppo = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_USER_BY_UUID, oppoSocketId);
+
+      await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_GAME_LOGS, [
+        host[0][0].id,
+        oppo[0][0].id,
+        false,
+      ]);
 
       await hostSocketWrite(socket, PacketType.GAME_OVER_NOTIFICATION, hostOverPacket);
 
