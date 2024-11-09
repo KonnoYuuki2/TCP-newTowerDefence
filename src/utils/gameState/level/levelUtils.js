@@ -1,5 +1,5 @@
-import { UserFields } from '../../constants/constant.js';
-import { redis } from '../redis/redis.js';
+import { UserFields } from '../../../constants/constant.js';
+import { redis } from '../../redis/redis.js';
 
 // 현재 레벨 가져오기
 export const getMonsterLevel = async (socket) => {

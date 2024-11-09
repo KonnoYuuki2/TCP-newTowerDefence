@@ -1,11 +1,14 @@
 import { UserFields } from '../../constants/constant.js';
+import { calculateUserGold, getUserGold, setUserGold } from '../gameState/gold/goldUtils.js';
+import { getMonsterLevel, setMonsterLevel } from '../gameState/level/levelUtils.js';
+import { calculateScore, getScore, setScore } from '../gameState/score/scoreUtils.js';
 import { redis } from '../redis/redis.js';
 
 // 몬스터데이터 리스트에 새로운 몬스터아이디를 가진 객체를 생성해서 배열에 추가
 export const spawnMonster = async (socket) => {
   try {
     let monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
-    const monsterLevel = await redis.getUserField(socket.id, UserFields.MONSTER_LEVEL);
+    const monsterLevel = await getMonsterLevel(socket);
     if (monsterData == null) {
       monsterData = [];
     }
@@ -52,5 +55,23 @@ export const monsterDeath = async (socket, monsterId) => {
     await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
   } catch (error) {
     console.error(`처치된 몬스터 삭제 중 에러 발생: ${error}`);
+  }
+};
+
+export const monsterDeathUpdateGameState = async (socket) => {
+  // 몬스터가 죽었을 떄 레벨에 따라서 스코어 증가 및 갱신
+  const score = await getScore(socket);
+  const monsterLevel = await getMonsterLevel(socket);
+
+  await setScore(socket, await calculateScore(score, monsterLevel));
+
+  const gold = await getUserGold(socket);
+
+  await setUserGold(socket, await calculateUserGold(gold, monsterLevel));
+
+  const increasedScore = await getScore(socket);
+
+  if (increasedScore % 100 === 0) {
+    await setMonsterLevel(socket, monsterLevel);
   }
 };

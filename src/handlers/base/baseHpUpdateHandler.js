@@ -1,10 +1,10 @@
 import { UserFields } from '../../constants/constant.js';
 import { PacketType } from '../../constants/header.js';
-import { connectedSockets } from '../../events/onConnection.js';
 import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { baseHpVerify } from '../../utils/base/baseUtils.js';
 import { redis } from '../../utils/redis/redis.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 
 export const baseHpUpdateHandler = async ({ socket, payload }) => {
   try {
@@ -14,11 +14,6 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
 
     // 기지 HP 업데이트
     await redis.updateUserField(socket.id, UserFields.BASE_HP, baseHp);
-
-    // 게임 세션의 모든 유저 가져오기
-    const users = await redis.getUsers(socket.gameId);
-    const enemySocketId = users.find((id) => id !== socket.id);
-    const enemySocket = connectedSockets.get(enemySocketId);
 
     // 상대방에게 기지 HP 업데이트 알림
     const S2CUpdateBaseHPNotification = {
@@ -30,15 +25,7 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
       updateBaseHpNotification: S2CUpdateBaseHPNotification,
     };
 
-    enemySocket.write(
-      createResponse(
-        PacketType.UPDATE_BASE_HP_NOTIFICATION,
-        enemySocket.version,
-        enemySocket.sequence,
-        gamePacket,
-      ),
-    );
-
+    await oppoSocketWrite(socket, PacketType.UPDATE_BASE_HP_NOTIFICATION, gamePacket);
     // 자신의 상태 동기화
     const buffer = await stateSyncNotification(socket);
     socket.write(buffer);
@@ -57,23 +44,9 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
         gameOverNotification: { isWin: true },
       };
 
-      socket.write(
-        createResponse(
-          PacketType.GAME_OVER_NOTIFICATION,
-          socket.version,
-          socket.sequence,
-          hostOverPacket,
-        ),
-      );
+      await hostSocketWrite(socket, PacketType.GAME_OVER_NOTIFICATION, hostOverPacket);
 
-      enemySocket.write(
-        createResponse(
-          PacketType.GAME_OVER_NOTIFICATION,
-          enemySocket.version,
-          enemySocket.sequence,
-          oppoOverPacket,
-        ),
-      );
+      await oppoSocketWrite(socket, PacketType.GAME_OVER_NOTIFICATION, oppoOverPacket);
     }
   } catch (error) {
     console.error('몬스터 베이스 어택 처리 중 에러 발생:', error);

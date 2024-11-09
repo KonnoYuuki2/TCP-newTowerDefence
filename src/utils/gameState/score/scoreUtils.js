@@ -1,5 +1,5 @@
-import { UserFields } from '../../constants/constant.js';
-import { redis } from '../redis/redis.js';
+import { UserFields } from '../../../constants/constant.js';
+import { redis } from '../../redis/redis.js';
 
 // 스코어 관련 처리 유틸
 
@@ -30,5 +30,5 @@ export const setHighScore = async (socket, highScore) => {
 };
 
 export const calculateScore = async (score, level) => {
-  return level * 20 + score;
+  return level * 100 + score;
 };
