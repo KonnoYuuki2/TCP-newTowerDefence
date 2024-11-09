@@ -1,12 +1,14 @@
 import { PacketType } from '../../constants/header.js';
 import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
-import { addTower } from '../../utils/towers/towerUtils.js';
+import { addTower, towerPurchaseCalculator } from '../../utils/towers/towerUtils.js';
 
 export const towerPurchaseHandler = async ({ socket, payload }) => {
   try {
     // 타워를 구입했을 때 생성된 타워의 데이터를 담는 객체
     const towerData = await addTower(socket, payload);
     // towerId를 다시 클라이언트로 보내줘야 함
+
+    await towerPurchaseCalculator(socket);
 
     const hostPacket = {
       towerPurchaseResponse: { towerId: towerData.towerId },

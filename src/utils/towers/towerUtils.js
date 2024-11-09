@@ -1,4 +1,5 @@
 import { UserFields } from '../../constants/constant.js';
+import { getUserGold, setUserGold } from '../gameState/gold/goldUtils.js';
 import { redis } from '../redis/redis.js';
 
 export const getTower = async (towerId, userId) => {
@@ -48,4 +49,9 @@ export const addTower = async (socket, payload) => {
   await redis.updateUserField(socket.id, UserFields.TOWERS, towerData);
 
   return tower;
+};
+
+export const towerPurchaseCalculator = async (socket) => {
+  const userGold = await getUserGold(socket);
+  await setUserGold(socket, userGold - 100);
 };
