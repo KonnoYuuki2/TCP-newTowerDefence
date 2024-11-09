@@ -52,13 +52,10 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
 
       const host = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_USER_BY_UUID, socket.id);
 
-      console.log(`호스트 아이디`, host[0][0].id);
-
       const oppoSocketId = await getOppoSocketId(socket);
 
       const oppo = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_USER_BY_UUID, oppoSocketId);
 
-      console.log(`적 아이디`, oppo[0][0].id);
       await pools.USER_DATABASE_SQL.query(SQL_QUERIES.CREATE_GAME_LOGS, [
         host[0][0].id,
         oppo[0][0].id,
