@@ -1,9 +1,6 @@
 import { PacketType } from '../../constants/header.js';
-import { connectedSockets } from '../../events/onConnection.js';
 import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { monsterDeath, monsterDeathUpdateGameState } from '../../utils/monster/monsterUtils.js';
-import { redis } from '../../utils/redis/redis.js';
-import { createResponse } from '../../utils/response/createResponse.js';
 import { oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 
 export const monsterDeathHandler = async ({ socket, payload }) => {

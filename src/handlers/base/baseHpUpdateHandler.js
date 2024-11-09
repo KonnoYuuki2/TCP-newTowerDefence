@@ -1,6 +1,5 @@
 import { UserFields } from '../../constants/constant.js';
 import { PacketType } from '../../constants/header.js';
-import { connectedSockets } from '../../events/onConnection.js';
 import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { baseHpVerify } from '../../utils/base/baseUtils.js';
 import { redis } from '../../utils/redis/redis.js';

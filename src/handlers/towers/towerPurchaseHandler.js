@@ -1,8 +1,4 @@
 import { PacketType } from '../../constants/header.js';
-import pools from '../../DB/dataBase.js';
-import { connectedSockets } from '../../events/onConnection.js';
-import { redis } from '../../utils/redis/redis.js';
-import { createResponse } from '../../utils/response/createResponse.js';
 import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 import { addTower } from '../../utils/towers/towerUtils.js';
 
