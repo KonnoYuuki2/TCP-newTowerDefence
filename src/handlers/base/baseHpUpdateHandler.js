@@ -4,7 +4,7 @@ import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { baseHpVerify } from '../../utils/base/baseUtils.js';
 import { redis } from '../../utils/redis/redis.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { oppoSocketWrite } from '../../utils/socket/socketUtils.js';
+import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 
 export const baseHpUpdateHandler = async ({ socket, payload }) => {
   try {
@@ -44,23 +44,9 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
         gameOverNotification: { isWin: true },
       };
 
-      socket.write(
-        createResponse(
-          PacketType.GAME_OVER_NOTIFICATION,
-          socket.version,
-          socket.sequence,
-          hostOverPacket,
-        ),
-      );
+      await hostSocketWrite(socket, PacketType.GAME_OVER_NOTIFICATION, hostOverPacket);
 
-      enemySocket.write(
-        createResponse(
-          PacketType.GAME_OVER_NOTIFICATION,
-          enemySocket.version,
-          enemySocket.sequence,
-          oppoOverPacket,
-        ),
-      );
+      await oppoSocketWrite(socket, PacketType.GAME_OVER_NOTIFICATION, oppoOverPacket);
     }
   } catch (error) {
     console.error('몬스터 베이스 어택 처리 중 에러 발생:', error);

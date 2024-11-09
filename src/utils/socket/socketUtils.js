@@ -2,7 +2,13 @@ import { connectedSockets } from '../../events/onConnection.js';
 import { redis } from '../redis/redis.js';
 import { createResponse } from '../response/createResponse.js';
 
-// 적 소켓에게 정보 보내주기
+/**
+ * 적 소켓을 찾아서 write 하는 함수
+ * @param {Socket} socket
+ * @param {type} packetType
+ * @returns {}
+ */
+
 export const oppoSocketWrite = async (socket, type, gamePacket) => {
   // 모든 유저 정보 가져옴
   const users = await redis.getUsers(socket.gameId);
@@ -18,7 +24,12 @@ export const oppoSocketWrite = async (socket, type, gamePacket) => {
   oppoSocket.write(createResponse(type, oppoSocket.version, oppoSocket.seqeunce, gamePacket));
 };
 
-// 현재 유저에게 정보 보내주기
+/**
+ * 내 소켓을 찾아서 write 하는 함수
+ * @param {Socket} socket
+ * @param {type} packetType
+ * @returns {}
+ */
 export const hostSocketWrite = async (socket, type, gamePacket) => {
   const hostSocket = await connectedSockets.get(socket.id);
 
