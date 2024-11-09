@@ -24,8 +24,6 @@ export const stateSyncNotification = async (socket) => {
       stateSyncNotification: S2CStateSyncNotification,
     };
 
-    //console.log(gamePacket);
-
     const buffer = createResponse(
       HANDLER_IDS.STATE_SYNC_NOTIFICATION,
       socket.version,
