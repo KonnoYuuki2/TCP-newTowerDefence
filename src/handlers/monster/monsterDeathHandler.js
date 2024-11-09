@@ -7,8 +7,6 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
   try {
     const { monsterId } = payload;
 
-    // await monsterDeath(socket, monsterId);
-
     await monsterDeathUpdateGameState(socket);
 
     const S2CEnemyMonsterDeathNotification = {
@@ -22,7 +20,7 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     const buffer = await stateSyncNotification(socket);
     socket.write(buffer);
 
-    await monsterDeath(socket, monsterId);
+    // await monsterDeath(socket, monsterId);
   } catch (error) {
     console.error(`몬스터 처치 처리 중 에러 발생: ${error}`);
   }
