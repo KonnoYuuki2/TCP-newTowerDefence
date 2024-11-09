@@ -1,0 +1,12 @@
+{
+  "name": "monsterLevel",
+  "version": "1.0.0",
+  "data": [
+    { "id": 1, "nextLevel": 100, "score": 10, "reward": 100 },
+    { "id": 2, "nextLevel": 250, "score": 15, "reward": 80 },
+    { "id": 3, "nextLevel": 500, "score": 20, "reward": 70 },
+    { "id": 4, "nextLevel": 1000, "score": 25, "reward": 60 },
+    { "id": 5, "nextLevel": 2000, "score": 28, "reward": 50 },
+    { "id": 6, "nextLevel": 5000, "score": 30, "reward": 50 }
+  ]
+}
