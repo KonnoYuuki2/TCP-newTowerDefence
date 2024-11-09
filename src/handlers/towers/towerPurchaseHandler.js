@@ -3,6 +3,7 @@ import pools from '../../DB/dataBase.js';
 import { connectedSockets } from '../../events/onConnection.js';
 import { redis } from '../../utils/redis/redis.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 import { addTower } from '../../utils/towers/towerUtils.js';
 
 export const towerPurchaseHandler = async ({ socket, payload }) => {
@@ -11,13 +12,6 @@ export const towerPurchaseHandler = async ({ socket, payload }) => {
     const towerData = await addTower(socket, payload);
     // towerId를 다시 클라이언트로 보내줘야 함
 
-    const users = await redis.getUsers(socket.gameId);
-
-    const oppoSocketId = users.find((user) => user !== socket.id);
-
-    const hostSocket = connectedSockets.get(socket.id);
-    const oppoSocket = connectedSockets.get(oppoSocketId);
-
     const hostPacket = {
       towerPurchaseResponse: { towerId: towerData.towerId },
     };
@@ -25,22 +19,8 @@ export const towerPurchaseHandler = async ({ socket, payload }) => {
       addEnemyTowerNotification: { towerId: towerData.towerId, x: towerData.x, y: towerData.y },
     };
 
-    hostSocket.write(
-      createResponse(
-        PacketType.TOWER_PURCHASE_RESPONSE,
-        hostSocket.version,
-        hostSocket.sequence,
-        hostPacket,
-      ),
-    );
-    oppoSocket.write(
-      createResponse(
-        PacketType.ADD_ENEMY_TOWER_NOTIFICATION,
-        oppoSocket.version,
-        oppoSocket.sequence,
-        oppoPacket,
-      ),
-    );
+    await hostSocketWrite(socket, PacketType.TOWER_PURCHASE_RESPONSE, hostPacket);
+    await oppoSocketWrite(socket, PacketType.ADD_ENEMY_TOWER_NOTIFICATION, oppoPacket);
   } catch (error) {
     console.error(`타워 구입 정보 처리 중 에러 발생: ${error}`);
   }
