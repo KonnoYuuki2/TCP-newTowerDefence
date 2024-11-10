@@ -77,6 +77,6 @@ export const monsterDeathUpdateGameState = async (socket) => {
   const levelData = data.find((el) => el.id === monsterLevel);
 
   if (increasedScore >= levelData.nextLevel) {
-    if (levelData.id < 6) await setMonsterLevel(socket, monsterLevel);
+    if (levelData.id < 15) await setMonsterLevel(socket, monsterLevel);
   }
 };
