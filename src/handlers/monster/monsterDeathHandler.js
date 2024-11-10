@@ -20,7 +20,9 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     const buffer = await stateSyncNotification(socket);
     socket.write(buffer);
 
-    // await monsterDeath(socket, monsterId);
+    setTimeout(async () => {
+      await monsterDeath(socket, monsterId);
+    }, 1500);
   } catch (error) {
     console.error(`몬스터 처치 처리 중 에러 발생: ${error}`);
   }

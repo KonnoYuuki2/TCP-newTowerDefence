@@ -67,22 +67,27 @@ export const login = async ({ socket, payload }) => {
   } else {
     const isMatch = await bcrypt.compare(password, sqlUserData[0].password);
     if (isMatch) {
-      message = '성공';
-      const data = { id: id };
-      const options = { expiresIn: '6h' };
-      token = jwt.sign(data, Config.SERVER.JWT_SECRETKEY, options);
-      isSuccess = true;
+      // 로그인 시 유저의 uuid를 조회해서 소켓에 id 부여
+      const uuid = sqlUserData[0].uuid;
+      if (!connectedSockets.has(uuid)) {
+        message = '성공';
+        const data = { id: id };
+        const options = { expiresIn: '6h' };
+        token = jwt.sign(data, Config.SERVER.JWT_SECRETKEY, options);
+        isSuccess = true;
+        socket.id = uuid;
+        connectedSockets.set(socket.id, socket);
+      } else {
+        message = '이미 로그인한 유저가 있습니다.';
+        isSuccess = false;
+        failCode = failCodeReturn(3);
+      }
     } else {
       message = '비밀번호가 틀렸습니다.';
       failCode = failCodeReturn(3);
       const token = null;
     }
   }
-
-  // 로그인 시 유저의 uuid를 조회해서 소켓에 id 부여
-  const uuid = sqlUserData[0].uuid;
-  socket.id = uuid;
-  connectedSockets.set(socket.id, socket);
 
   const S2CLoginResponse = {
     success: isSuccess,
@@ -112,5 +117,3 @@ function isValidEmail(email) {
 function isEmptyArray(arr) {
   return Array.isArray(arr) && arr.length === 0;
 }
-
-function getFailCode(number) {}
