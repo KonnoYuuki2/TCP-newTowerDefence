@@ -3,6 +3,10 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
+/**
+ * 타워 공격 요청시 처리 함수
+ * @param {socket, Object}  // socket, payload
+ */
 export const towerAttackHandler = async ({ socket, payload }) => {
   try {
     const { towerId, monsterId } = payload;

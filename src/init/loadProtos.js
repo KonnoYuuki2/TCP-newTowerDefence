@@ -8,6 +8,12 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const protoFolder = path.join(dirname, '../protobuf');
 
+/**
+ * .proto 파일들을 전부 가져오는 함수
+ * @param {*} protoFolder
+ * @param {*} fileList
+ * @returns
+ */
 const getAllProtoFiles = (protoFolder, fileList = []) => {
   const files = fs.readdirSync(protoFolder);
 
@@ -27,6 +33,9 @@ const protoFiles = getAllProtoFiles(protoFolder);
 
 const protoMessages = {};
 
+/**
+ * protoMessages에 가져온 protoFiles를 등록하는 함수
+ */
 export const loadProtos = async () => {
   try {
     const root = new protobuf.Root();
@@ -55,6 +64,10 @@ export const loadProtos = async () => {
   }
 };
 
+/**
+ * 등록한 protoMessages를 가져오는 함수
+ * @returns {Object}
+ */
 export const getProtoMessages = () => {
   return { ...protoMessages };
 };

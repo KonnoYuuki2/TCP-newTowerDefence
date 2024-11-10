@@ -4,6 +4,10 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { monsterDeath, monsterDeathUpdateGameState } from '../../utils/monster/monsterUtils.js';
 import { oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 
+/**
+ * 몬스터 사망 요청시 처리 함수
+ * @param {socket, Object}  // socket, payload
+ */
 export const monsterDeathHandler = async ({ socket, payload }) => {
   try {
     const { monsterId } = payload;

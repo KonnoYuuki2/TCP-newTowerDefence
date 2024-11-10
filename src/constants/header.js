@@ -8,6 +8,7 @@ const VERSION = 5; // 버전 스트링 길이
 const SEQUENCE = 4; // 패킷 번호
 const PAYLOAD_LENGTH = 4;
 
+// 전체 길이
 const TOTAL_HEADER_LENGTH = PACKET_TYPE + VERSION_LENGTH + VERSION + SEQUENCE + PAYLOAD_LENGTH;
 
 // 위쪽에 패킷들에 대한 정보를 저장해둔 것

@@ -9,6 +9,10 @@ import { connectedSockets } from '../events/onConnection.js';
 import { SALTROUNDS } from '../constants/constant.js';
 import { handleError } from '../utils/error/errorHandler.js';
 
+/**
+ * 회원가입 요청시 처리 함수
+ * @param {socket, Object}  // socket, payload
+ */
 export const registerHandler = async ({ socket, payload }) => {
   try {
     const { id, password, email } = payload;
@@ -60,6 +64,11 @@ export const registerHandler = async ({ socket, payload }) => {
     await handleError(socket, error);
   }
 };
+      
+/**
+ * 로그인 요청시 처리 함수
+ * @param {socket, Object}
+ */
 export const loginHandler = async ({ socket, payload }) => {
   try {
     const { id, password } = payload;

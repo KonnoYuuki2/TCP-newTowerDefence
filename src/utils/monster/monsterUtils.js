@@ -7,7 +7,11 @@ import { getMonsterLevel, setMonsterLevel } from '../gameState/level/levelUtils.
 import { calculateScore, getScore, setScore } from '../gameState/score/scoreUtils.js';
 import { redis } from '../redis/redis.js';
 
-// 몬스터데이터 리스트에 새로운 몬스터아이디를 가진 객체를 생성해서 배열에 추가
+/**
+ * 몬스터를 생성하여 저장하는 함수
+ * @param {*} socket
+ * @returns {Object}
+ */
 export const spawnMonster = async (socket) => {
   try {
     let monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
@@ -43,7 +47,11 @@ export const spawnMonster = async (socket) => {
   }
 };
 
-// 몬스터데이터 리스트에서 죽은 몬스터의Id를 찾아서 해당 아이디를 가진 몬스터를 제거
+/**
+ * 사망한 몬스터 id를 지우는 함수
+ * @param {*} socket
+ * @param {*} monsterId
+ */
 export const monsterDeath = async (socket, monsterId) => {
   try {
     const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);

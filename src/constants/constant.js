@@ -1,3 +1,4 @@
+// 레디스 관련 필드
 export const UserFields = {
   USER_GOLD: 'userGold',
   BASE_HP: 'baseHp',

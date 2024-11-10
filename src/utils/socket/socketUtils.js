@@ -5,6 +5,11 @@ import { handleError } from '../error/errorHandler.js';
 import { redis } from '../redis/redis.js';
 import { createResponse } from '../response/createResponse.js';
 
+/**
+ * 적 소켓 아이디를 가져오는 함수
+ * @param {*} socket
+ * @returns {string}
+ */
 export const getOppoSocketId = async (socket) => {
   // 모든 유저 정보 가져옴
   const users = await redis.getUsers(socket.gameId);
@@ -18,8 +23,8 @@ export const getOppoSocketId = async (socket) => {
 };
 
 /**
- * 적 소켓을 찾는 함수
- * @param {Socket} socket
+ * 적 소켓을 반환해주는 함수
+ * @param {*} socket
  * @returns {socket}
  */
 export const getOppoSocket = async (socket) => {
@@ -38,9 +43,8 @@ export const getOppoSocket = async (socket) => {
 
 /**
  * 적 소켓을 찾아서 write 하는 함수
- * @param {Socket} socket
- * @param {type} packetType
- * @returns {}
+ * @param {*} socket
+ * @param {*} packetType
  */
 export const oppoSocketWrite = async (socket, type, gamePacket) => {
   try {
@@ -56,9 +60,8 @@ export const oppoSocketWrite = async (socket, type, gamePacket) => {
 
 /**
  * 내 소켓을 찾아서 write 하는 함수
- * @param {Socket} socket
- * @param {type} packetType
- * @returns {}
+ * @param {*} socket
+ * @param {*} packetType
  */
 export const hostSocketWrite = async (socket, type, gamePacket) => {
   const hostSocket = await connectedSockets.get(socket.id);
