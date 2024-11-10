@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +30,7 @@ export const loadGameAssets = async () => {
     gameAssets = { gameState, monsterLevel };
     return gameAssets;
   } catch (error) {
-    throw new Error('assets 파일 로드에 실패했습니다.' + error.message);
+    throw new CustomError(ErrorCodes.ASSETS_LOADING_FAIL, 'assets 파일 로드에 실패했습니다.');
   }
 };
 

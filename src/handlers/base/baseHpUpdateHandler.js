@@ -4,6 +4,7 @@ import pools from '../../DB/dataBase.js';
 import { SQL_QUERIES } from '../../DB/user/user.queries.js';
 import { stateSyncNotification } from '../../notifications/syncNotification.js';
 import { baseHpVerify } from '../../utils/base/baseUtils.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 import { redis } from '../../utils/redis/redis.js';
 import {
   getOppoSocket,
@@ -67,6 +68,6 @@ export const baseHpUpdateHandler = async ({ socket, payload }) => {
       await oppoSocketWrite(socket, PacketType.GAME_OVER_NOTIFICATION, oppoOverPacket);
     }
   } catch (error) {
-    console.error('몬스터 베이스 어택 처리 중 에러 발생:', error);
+    await handleError(socket, error);
   }
 };

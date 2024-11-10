@@ -1,3 +1,5 @@
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 import {
   createInitialGameState,
   createInitialPlayerData,
@@ -70,6 +72,6 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
 
     return { packet1, packet2 };
   } catch (error) {
-    console.error(`매칭 패킷 생성 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.PACKET_STRUCTURE_MISMATCH, `매칭 패킷 생성 중 에러 발생`);
   }
 };

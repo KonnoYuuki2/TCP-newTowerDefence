@@ -1,4 +1,6 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { redis } from '../utils/redis/redis.js';
 import { createResponse } from '../utils/response/createResponse.js';
 
@@ -33,6 +35,9 @@ export const stateSyncNotification = async (socket) => {
 
     return buffer;
   } catch (error) {
-    console.error(`상태 동기화 패킷 생성 중 에러 발생: ${error}`);
+    throw new CustomError(
+      ErrorCodes.PACKET_STRUCTURE_MISMATCH,
+      `상태 동기화 패킷 생성 중 에러 발생`,
+    );
   }
 };

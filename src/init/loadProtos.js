@@ -14,8 +14,6 @@ const getAllProtoFiles = (protoFolder, fileList = []) => {
   files.forEach((file) => {
     const filePath = path.join(protoFolder, file);
 
-    //console.log(`프로토 파일 이름`, filePath);
-    // 해당하는 파일이 디렉터리인지를 확인해야겟지?
     if (fs.statSync(filePath).isDirectory()) {
       getAllProtoFiles(filePath, fileList);
     } else if (path.extname(file) === '.proto') {
@@ -42,9 +40,6 @@ export const loadProtos = async () => {
     for (let [packageName, types] of Object.entries(packetNames)) {
       protoMessages[packageName] = {};
 
-      //   console.log(`packageName`, packageName);
-      //   console.log(`types`, types);
-
       for (const [protoType, typeName] of Object.entries(types)) {
         try {
           protoMessages[packageName][protoType] = root.lookupType(typeName);
@@ -56,13 +51,10 @@ export const loadProtos = async () => {
 
     console.log(`프로토 타입 로드에 끝났습니다.`);
   } catch (error) {
-    console.error(`프로토 로딩중 에러 발생`, error);
+    throw new CustomError(ErrorCodes.PROTOFILE_LOADING_FAIL, `프로토 로딩 중 에러 발생`);
   }
 };
 
 export const getProtoMessages = () => {
-  //console.log(protoMessages.packets.C2SRegisterRequest); // C2SRegisterRequest에 접근
-
   return { ...protoMessages };
 };
-//setTimeout(getProtoMessages, 1200);

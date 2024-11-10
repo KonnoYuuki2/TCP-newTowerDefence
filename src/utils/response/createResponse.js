@@ -19,6 +19,7 @@ export const createResponse = (packetType, version, sequence, gamePacket) => {
 
   return result_Buffer;
 };
+
 export const failCodeReturn = (number) => {
   const protoMessages = getProtoMessages();
   const failCode = protoMessages.failCode.GlobalFailCode;

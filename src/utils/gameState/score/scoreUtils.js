@@ -1,5 +1,7 @@
 import { UserFields } from '../../../constants/constant.js';
 import { getGameAssets } from '../../../init/assets.js';
+import CustomError from '../../error/customError.js';
+import { ErrorCodes } from '../../error/errorCodes.js';
 import { redis } from '../../redis/redis.js';
 
 // 스코어 관련 처리 유틸
@@ -31,7 +33,11 @@ export const setHighScore = async (socket, highScore) => {
 };
 
 export const calculateScore = async (score, level) => {
-  const { data } = getGameAssets().monsterLevel;
-  const amount = data.find((el) => el.id === level);
-  return score + amount.score;
+  try {
+    const { data } = getGameAssets().monsterLevel;
+    const amount = data.find((el) => el.id === level);
+    return score + amount.score;
+  } catch (error) {
+    throw new CustomError(ErrorCodes.GAME_STATE_UPDATE_ERROR, `점수 계산 중 에러 발생`);
+  }
 };

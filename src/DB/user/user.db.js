@@ -1,3 +1,5 @@
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import pools from '../dataBase.js';
 import { SQL_QUERIES } from './user.queries.js';
 export const findUser = async (account_id) => {
@@ -8,7 +10,10 @@ export const findUser = async (account_id) => {
 
     return reselt[0];
   } catch (error) {
-    console.error(`account_id로 유저 정보 조회 중 에러 발생: ${error}`);
+    throw new CustomError(
+      ErrorCodes.DATABASE_QUERY_ERROR,
+      `account_id로 유저 정보 조회 중 에러 발생`,
+    );
   }
 };
 
@@ -26,11 +31,9 @@ export const createUser = async (account_id, uuid, password, email) => {
       password,
       email,
     ]);
+
     return { account_id, uuid, password, email };
   } catch (error) {
-    console.error(`account 생성 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.DATABASE_QUERY_ERROR, `account 생성 중 에러 발생`);
   }
 };
-// export const updateUserLogin = async (id) => {
-//   await pools.USER_DATABASE_SQL.query(SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
-// };

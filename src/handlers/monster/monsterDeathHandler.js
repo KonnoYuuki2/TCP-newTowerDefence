@@ -1,5 +1,6 @@
 import { PacketType } from '../../constants/header.js';
 import { stateSyncNotification } from '../../notifications/syncNotification.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 import { monsterDeath, monsterDeathUpdateGameState } from '../../utils/monster/monsterUtils.js';
 import { oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 
@@ -21,9 +22,13 @@ export const monsterDeathHandler = async ({ socket, payload }) => {
     socket.write(buffer);
 
     setTimeout(async () => {
-      await monsterDeath(socket, monsterId);
+      try {
+        await monsterDeath(socket, monsterId);
+      } catch (error) {
+        await handleError(socket, error);
+      }
     }, 1500);
   } catch (error) {
-    console.error(`몬스터 처치 처리 중 에러 발생: ${error}`);
+    await handleError(socket, error);
   }
 };

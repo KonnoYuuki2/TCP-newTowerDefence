@@ -1,4 +1,6 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 /**
  * 페이로드 데이터를 디코딩하는 함수
@@ -20,6 +22,6 @@ export const packetParser = (packet) => {
 
     return payload;
   } catch (error) {
-    console.error(`패킷 파싱 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, `패킷 파싱 중 에러 발생`);
   }
 };
