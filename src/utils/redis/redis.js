@@ -214,6 +214,10 @@ export const redis = {
   },
 };
 
+/**
+ * 게임 종료 후 데이터 삭제 함수
+ * @param {*} socket
+ */
 export const deleteData = async (socket) => {
   // 게임 세션 삭제
   await redis.deleteSession(socket.gameId);

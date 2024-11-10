@@ -7,7 +7,13 @@ import jwt from 'jsonwebtoken';
 import Config from '../config/config.js';
 import { connectedSockets } from '../events/onConnection.js';
 
+// 암호화시 돌리는 횟수
 const SALTROUNDS = 10;
+
+/**
+ * 회원가입 요청시 처리 함수
+ * @param {socket, Object}  // socket, payload
+ */
 export const register = async ({ socket, payload }) => {
   const { id, password, email } = payload;
   const uuid = uuidv4();
@@ -52,6 +58,11 @@ export const register = async ({ socket, payload }) => {
   //console.log(result);
   socket.write(result);
 };
+
+/**
+ * 로그인 요청시 처리 함수
+ * @param {socket, Object}
+ */
 export const login = async ({ socket, payload }) => {
   const { id, password } = payload;
 

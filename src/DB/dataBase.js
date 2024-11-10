@@ -3,6 +3,10 @@ import Redis from 'ioredis';
 import { formatDate } from './dataFormatter.js';
 import Config from '../config/config.js';
 
+/**
+ *  DB pool 생성
+ * @returns {Object}
+ */
 const createPoolSQL = () => {
   const pool = mysql.createPool({
     host: Config.DATA_BASE.USER_DATABASE_SQL.HOST,
@@ -25,6 +29,11 @@ const createPoolSQL = () => {
   };
   return pool;
 };
+
+/**
+ * 레디스 pool 생성
+ * @returns {function}
+ */
 const createPoolRedis = () => {
   const redisClient = new Redis({
     host: Config.DATA_BASE.GAME_DATABASE_REDIS.HOST,

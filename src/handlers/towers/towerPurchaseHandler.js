@@ -2,6 +2,10 @@ import { PacketType } from '../../constants/header.js';
 import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 import { addTower, towerPurchaseCalculator } from '../../utils/towers/towerUtils.js';
 
+/**
+ * 타워 구입 요청시 처리 함수
+ * @param {socket, Object}  // socket, payload
+ */
 export const towerPurchaseHandler = async ({ socket, payload }) => {
   try {
     // 타워를 구입했을 때 생성된 타워의 데이터를 담는 객체
