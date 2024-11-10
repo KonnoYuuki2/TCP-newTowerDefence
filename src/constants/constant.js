@@ -9,3 +9,5 @@ export const UserFields = {
 };
 
 export const MAX_SEQUENCE_DIFF = 5;
+
+export const SALTROUNDS = 10;
