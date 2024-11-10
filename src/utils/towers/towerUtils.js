@@ -2,6 +2,12 @@ import { UserFields } from '../../constants/constant.js';
 import { getUserGold, setUserGold } from '../gameState/gold/goldUtils.js';
 import { redis } from '../redis/redis.js';
 
+/**
+ * 타워 id에 해당하는 타워를 반환해주는 함수
+ * @param {*} towerId
+ * @param {*} userId
+ * @returns {Object}
+ */
 export const getTower = async (towerId, userId) => {
   // 유저 전체 정보 가져옴
   const userTowers = await redis.getUserField(userId, UserFields.TOWERS);
@@ -11,6 +17,12 @@ export const getTower = async (towerId, userId) => {
   });
 };
 
+/**
+ * 타워,몬스터 정보 유무를 검증하는 함수
+ * @param {*} towerId
+ * @param {*} monsterId
+ * @param {*} userId
+ */
 export const towerAttackVerifiy = async (towerId, monsterId, userId) => {
   // 유저 전체 정보 가져옴
 
@@ -31,6 +43,12 @@ export const towerAttackVerifiy = async (towerId, monsterId, userId) => {
   }
 };
 
+/**
+ * 타워를 추가하는 함수
+ * @param {*} socket
+ * @param {*} payload
+ * @returns {Object}
+ */
 export const addTower = async (socket, payload) => {
   const { x, y } = payload;
   const towerData = await redis.getUserField(socket.id, UserFields.TOWERS);
@@ -51,6 +69,10 @@ export const addTower = async (socket, payload) => {
   return tower;
 };
 
+/**
+ * 타워 구입시 저장된 골드를 차감하는 함수
+ * @param {*} socket
+ */
 export const towerPurchaseCalculator = async (socket) => {
   const userGold = await getUserGold(socket);
   await setUserGold(socket, userGold - 1000);

@@ -6,6 +6,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const basePath = path.join(__dirname, '../../assets/');
 
+/**
+ * 현재 파일을 읽어오는 함수
+ * @param {filename}
+ */
 const readFileAsync = (filename) => {
   return new Promise((resolve, reject) => {
     fs.readFile(path.join(basePath, filename), 'utf8', (err, data) => {
@@ -18,6 +22,10 @@ const readFileAsync = (filename) => {
   });
 };
 
+/**
+ * 게임 에셋(json 파일)을 gameAssets에 등록하는 함수
+ * @returns {Object}
+ */
 export const loadGameAssets = async () => {
   try {
     const [gameState, monsterLevel] = await Promise.all([
@@ -34,6 +42,10 @@ export const loadGameAssets = async () => {
 
 let gameAssets = {};
 
+/**
+ * 게임 에셋을 가져오는 함수
+ * @returns {Object}
+ */
 export const getGameAssets = () => {
   return gameAssets;
 };

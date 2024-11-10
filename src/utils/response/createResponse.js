@@ -19,6 +19,12 @@ export const createResponse = (packetType, version, sequence, gamePacket) => {
 
   return result_Buffer;
 };
+
+/**
+ * failCode를 반환해주는 함수
+ * @param {*} number
+ * @returns {number}
+ */
 export const failCodeReturn = (number) => {
   const protoMessages = getProtoMessages();
   const failCode = protoMessages.failCode.GlobalFailCode;

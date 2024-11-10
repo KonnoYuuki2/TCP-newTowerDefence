@@ -1,5 +1,11 @@
 import { redis } from '../utils/redis/redis.js';
 
+/**
+ * DB 연결 테스트
+ * @param {pool} pool
+ * @param {dbName} dbName
+ * @param {dbType} dbType
+ */
 const testDbConnection = async (pool, dbName, dbType) => {
   try {
     //sql
@@ -15,6 +21,9 @@ const testDbConnection = async (pool, dbName, dbType) => {
   }
 };
 
+/**
+ * redis 연결 테스트
+ */
 const testRedis = async () => {
   const userData = {
     userGold: 1000,

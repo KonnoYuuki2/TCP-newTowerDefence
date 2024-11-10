@@ -1,3 +1,4 @@
+// SQL 관련 query문
 export const SQL_QUERIES = {
   FIND_USER_BY_ACCOUNT_ID: 'SELECT * FROM accounts WHERE account_id = ?',
   //FIND_USER_BY_ACCOUNT_ID_PASSWORD: 'SELECT * FROM user WHERE'

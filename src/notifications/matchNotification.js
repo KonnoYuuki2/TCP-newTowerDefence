@@ -1,3 +1,6 @@
+import pools from '../DB/dataBase.js';
+import { findHighScoreByUserId, findUserIdByUUID } from '../DB/user/user.db.js';
+import { SQL_QUERIES } from '../DB/user/user.queries.js';
 import {
   createInitialGameState,
   createInitialPlayerData,
@@ -15,20 +18,25 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
   try {
     const initialGameState = createInitialGameState();
 
+    const hostId = await findUserIdByUUID(hostSocketId);
+
+    const oppoId = await findUserIdByUUID(oppoSocketId);
+
     //하이스코어 조회 추가 필요
-    const hostHighScore = 'db 하이스코어' || 0;
-    const oppoHighScore = 'db 하이스코어' || 0;
+    const hostHighScore = await findHighScoreByUserId(hostId);
+
+    const oppoHighScore = await findHighScoreByUserId(oppoId);
 
     // 플레이어와 상대방 초기 데이터 설정
     const playerData = createInitialPlayerData(
       initialGameState,
       createInitialTowers(3),
-      hostHighScore,
+      hostHighScore ? hostHighScore : 0,
     );
     const opponentData = createInitialPlayerData(
       initialGameState,
       createInitialTowers(3, 100000),
-      oppoHighScore,
+      oppoHighScore ? oppoHighScore : 0,
     );
 
     const packet1 = {

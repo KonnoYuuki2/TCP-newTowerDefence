@@ -4,6 +4,7 @@ import HANDLER_IDS from '../src/constants/handlerIds.js';
 import { deserialize, serialize } from '../src/utils/serializer/serialize.js';
 import { getProtoMessages, loadProtos } from '../src/init/loadProtos.js';
 
+// 타워 공격 전용 테스트 코드 작성
 const client = new net.Socket();
 
 const version = '1.0.0';
