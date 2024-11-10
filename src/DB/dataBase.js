@@ -56,5 +56,6 @@ const createPoolRedis = () => {
   };
   return redisClient;
 };
+
 const pools = { USER_DATABASE_SQL: createPoolSQL(), GAME_DATABASE_REDIS: createPoolRedis() };
 export default pools;

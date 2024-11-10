@@ -4,6 +4,7 @@ import { createUserData } from '../../notifications/matchNotification.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { connectedSockets } from '../../events/onConnection.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 
 /**
  * 매칭 요청을 처리하는 함수
@@ -62,6 +63,6 @@ export const matchRequestHandler = async ({ socket, payload }) => {
       await redis.removeFromMatchQueue(2);
     }
   } catch (error) {
-    console.error('매칭 요청 처리 중 오류 발생:', error);
+    await handleError(socket, error);
   }
 };

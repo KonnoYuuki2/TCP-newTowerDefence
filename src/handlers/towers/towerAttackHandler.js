@@ -1,4 +1,5 @@
 import { PacketType } from '../../constants/header.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 import { oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 import { towerAttackVerifiy } from '../../utils/towers/towerUtils.js';
 
@@ -19,6 +20,6 @@ export const towerAttackHandler = async ({ socket, payload }) => {
 
     await oppoSocketWrite(socket, PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION, towerAttackPacket);
   } catch (error) {
-    console.error(`타워 공격 정보 처리중 에러 발생: ${error}`);
+    await handleError(socket, error);
   }
 };

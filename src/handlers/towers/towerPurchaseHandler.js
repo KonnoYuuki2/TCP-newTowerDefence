@@ -1,4 +1,5 @@
 import { PacketType } from '../../constants/header.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 import { addTower, towerPurchaseCalculator } from '../../utils/towers/towerUtils.js';
 
@@ -24,6 +25,6 @@ export const towerPurchaseHandler = async ({ socket, payload }) => {
     await hostSocketWrite(socket, PacketType.TOWER_PURCHASE_RESPONSE, hostPacket);
     await oppoSocketWrite(socket, PacketType.ADD_ENEMY_TOWER_NOTIFICATION, oppoPacket);
   } catch (error) {
-    console.error(`타워 구입 정보 처리 중 에러 발생: ${error}`);
+    await handleError(socket, error);
   }
 };

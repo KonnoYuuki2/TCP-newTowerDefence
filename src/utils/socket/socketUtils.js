@@ -1,4 +1,7 @@
 import { connectedSockets } from '../../events/onConnection.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
+import { handleError } from '../error/errorHandler.js';
 import { redis } from '../redis/redis.js';
 import { createResponse } from '../response/createResponse.js';
 
@@ -44,9 +47,15 @@ export const getOppoSocket = async (socket) => {
  * @param {*} packetType
  */
 export const oppoSocketWrite = async (socket, type, gamePacket) => {
-  const oppoSocket = await getOppoSocket(socket);
-
-  oppoSocket.write(createResponse(type, oppoSocket.version, oppoSocket.seqeunce, gamePacket));
+  try {
+    const oppoSocket = await getOppoSocket(socket);
+    if (!oppoSocket) {
+      throw new CustomError(ErrorCodes.SOCKET_NOT_FOUND, `상대방 소켓을 찾을 수 없습니다`);
+    }
+    oppoSocket.write(createResponse(type, oppoSocket.version, oppoSocket.sequence, gamePacket));
+  } catch (error) {
+    await handleError(socket, error);
+  }
 };
 
 /**

@@ -1,5 +1,7 @@
 import { UserFields } from '../../constants/constant.js';
 import { getGameAssets } from '../../init/assets.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 import { calculateUserGold, getUserGold, setUserGold } from '../gameState/gold/goldUtils.js';
 import { getMonsterLevel, setMonsterLevel } from '../gameState/level/levelUtils.js';
 import { calculateScore, getScore, setScore } from '../gameState/score/scoreUtils.js';
@@ -41,7 +43,7 @@ export const spawnMonster = async (socket) => {
 
     return spawnMonster;
   } catch (error) {
-    console.error(`몬스터 스폰 함수 실행 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.MONSTER_SPAWN_ERROR, `몬스터 생성 중 에러 발생`);
   }
 };
 
@@ -63,28 +65,32 @@ export const monsterDeath = async (socket, monsterId) => {
 
     await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
   } catch (error) {
-    console.error(`처치된 몬스터 삭제 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.MONSTER_NOT_FOUND, `처치된 몬스터 삭제 중 에러 발생`);
   }
 };
 
 export const monsterDeathUpdateGameState = async (socket) => {
-  const { data } = getGameAssets().monsterLevel;
+  try {
+    const { data } = getGameAssets().monsterLevel;
 
-  // 몬스터가 죽었을 떄 레벨에 따라서 스코어 증가 및 갱신
-  const score = await getScore(socket);
-  const monsterLevel = await getMonsterLevel(socket);
+    // 몬스터가 죽었을 떄 레벨에 따라서 스코어 증가 및 갱신
+    const score = await getScore(socket);
+    const monsterLevel = await getMonsterLevel(socket);
 
-  await setScore(socket, await calculateScore(score, monsterLevel));
+    await setScore(socket, await calculateScore(score, monsterLevel));
 
-  const gold = await getUserGold(socket);
+    const gold = await getUserGold(socket);
 
-  await setUserGold(socket, await calculateUserGold(gold, monsterLevel));
+    await setUserGold(socket, await calculateUserGold(gold, monsterLevel));
 
-  const increasedScore = await getScore(socket);
+    const increasedScore = await getScore(socket);
 
-  const levelData = data.find((el) => el.id === monsterLevel);
+    const levelData = data.find((el) => el.id === monsterLevel);
 
-  if (increasedScore >= levelData.nextLevel) {
-    if (levelData.id < 15) await setMonsterLevel(socket, monsterLevel);
+    if (increasedScore >= levelData.nextLevel) {
+      if (levelData.id < 15) await setMonsterLevel(socket, monsterLevel);
+    }
+  } catch (error) {
+    throw new CustomError(ErrorCodes.GAME_STATE_UPDATE_ERROR, `유저 데이터 업데이트 중 에러 발생`);
   }
 };

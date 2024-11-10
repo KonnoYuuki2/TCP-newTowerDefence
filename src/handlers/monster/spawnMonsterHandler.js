@@ -1,4 +1,5 @@
 import { PacketType } from '../../constants/header.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 import { spawnMonster } from '../../utils/monster/monsterUtils.js';
 import { hostSocketWrite, oppoSocketWrite } from '../../utils/socket/socketUtils.js';
 
@@ -27,6 +28,6 @@ export const spawnMonsterRequest = async ({ socket, payload }) => {
     await hostSocketWrite(socket, PacketType.SPAWN_MONSTER_RESPONSE, gamePacket);
     await oppoSocketWrite(socket, PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION, enemySpawnPacket);
   } catch (error) {
-    console.error(`몬스터 생성 요청중 에러 발생: ${error}`);
+    await handleError(socket, error);
   }
 };

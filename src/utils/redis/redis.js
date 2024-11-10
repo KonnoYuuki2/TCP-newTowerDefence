@@ -1,4 +1,6 @@
 import pools from '../../DB/dataBase.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 const redisClient = pools.GAME_DATABASE_REDIS;
 
@@ -19,7 +21,7 @@ export const redis = {
       await redisClient.sadd(key, userId);
       await redisClient.expire(key, 3600);
     } catch (error) {
-      console.error(`게임 세션에 유저 추가 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `게임 세션에 유저 추가 중 에러 발생`);
     }
   },
 
@@ -32,7 +34,7 @@ export const redis = {
     try {
       await redisClient.srem(`${GAME_SESSION_PREFIX}:${gameId}`, userId);
     } catch (error) {
-      console.error(`게임 세션에 유저 삭제 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `게임 세션에 유저 삭제 중 에러 발생`);
     }
   },
 
@@ -46,7 +48,10 @@ export const redis = {
       const users = await redisClient.smembers(`${GAME_SESSION_PREFIX}:${gameId}`);
       return users;
     } catch (error) {
-      console.error(`게임 세션의 모든 유저 조회 중 에러 발생: ${error}`);
+      throw new CustomError(
+        ErrorCodes.REDIS_IS_NOT_WORKING,
+        `게임 세션의 모든 유저 조회 중 에러 발생`,
+      );
     }
   },
 
@@ -61,7 +66,10 @@ export const redis = {
       const exists = await redisClient.sismember(`${GAME_SESSION_PREFIX}:${gameId}`, userId);
       return exists === 1 ? userId : null;
     } catch (error) {
-      console.error(`게임 세션에서 유저 조회 중 에러 발생: ${error}`);
+      throw new CustomError(
+        ErrorCodes.REDIS_IS_NOT_WORKING,
+        `게임 세션에서 유저 조회 중 에러 발생`,
+      );
     }
   },
 
@@ -73,7 +81,7 @@ export const redis = {
     try {
       await redisClient.del(`${GAME_SESSION_PREFIX}:${gameId}`);
     } catch (error) {
-      console.error(`게임 세션 삭제 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `게임 세션 삭제 중 에러 발생`);
     }
   },
 
@@ -95,7 +103,7 @@ export const redis = {
       });
       await redisClient.expire(key, 3600);
     } catch (error) {
-      console.error(`유저 데이터 저장 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `유저 데이터 조회 중 에러 발생`);
     }
   },
 
@@ -118,7 +126,7 @@ export const redis = {
         score: parseInt(data.score),
       };
     } catch (error) {
-      console.error(`유저 데이터 조회 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `유저 데이터 조회 중 에러 발생`);
     }
   },
 
@@ -142,7 +150,7 @@ export const redis = {
 
       return data;
     } catch (error) {
-      console.error(`유저 필드 조회 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `유저 필드 조회 중 에러 발생`);
     }
   },
 
@@ -159,7 +167,7 @@ export const redis = {
       await redisClient.hset(key, field, stringValue);
       await redisClient.expire(key, 3600);
     } catch (error) {
-      console.error(`유저 필드 업데이트 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `유저 필드 업데이트 중 에러 발생`);
     }
   },
 
@@ -171,7 +179,7 @@ export const redis = {
     try {
       await redisClient.del(`${USER_PREFIX}:${userId}`);
     } catch (error) {
-      console.error(`유저 데이터 삭제 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `유저 데이터 삭제 중 에러 발생`);
     }
   },
 
@@ -184,7 +192,7 @@ export const redis = {
     try {
       await redisClient.rpush(MATCH_PREFIX, JSON.stringify(player));
     } catch (error) {
-      console.error(`매치 큐에 유저 추가 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `매치 큐에 유저 추가 중 에러 발생`);
     }
   },
 
@@ -197,7 +205,7 @@ export const redis = {
       const queue = await redisClient.lrange(MATCH_PREFIX, 0, -1);
       return queue.map((player) => JSON.parse(player));
     } catch (error) {
-      console.error(`매치 큐의 유저 조회 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `매치 큐의 유저 조회 중 에러 발생`);
     }
   },
 
@@ -209,7 +217,7 @@ export const redis = {
     try {
       await redisClient.lpop(MATCH_PREFIX, count);
     } catch (error) {
-      console.error(`매치 큐의 유저 삭제 중 에러 발생: ${error}`);
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `매치 큐의 유저 삭제 중 에러 발생`);
     }
   },
 };
@@ -219,8 +227,12 @@ export const redis = {
  * @param {*} socket
  */
 export const deleteData = async (socket) => {
-  // 게임 세션 삭제
-  await redis.deleteSession(socket.gameId);
-  // 유저 데이터 삭제
-  await redis.deleteUserData(socket.id);
+  try {
+    // 게임 세션 삭제
+    await redis.deleteSession(socket.gameId);
+    // 유저 데이터 삭제
+    await redis.deleteUserData(socket.id);
+  } catch (error) {
+    throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `레디스 데이터 삭제 중 에러 발생`);
+  }
 };

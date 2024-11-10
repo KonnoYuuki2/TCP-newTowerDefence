@@ -49,9 +49,6 @@ export const loadProtos = async () => {
     for (let [packageName, types] of Object.entries(packetNames)) {
       protoMessages[packageName] = {};
 
-      //   console.log(`packageName`, packageName);
-      //   console.log(`types`, types);
-
       for (const [protoType, typeName] of Object.entries(types)) {
         try {
           protoMessages[packageName][protoType] = root.lookupType(typeName);
@@ -63,7 +60,7 @@ export const loadProtos = async () => {
 
     console.log(`프로토 타입 로드에 끝났습니다.`);
   } catch (error) {
-    console.error(`프로토 로딩중 에러 발생`, error);
+    throw new CustomError(ErrorCodes.PROTOFILE_LOADING_FAIL, `프로토 로딩 중 에러 발생`);
   }
 };
 

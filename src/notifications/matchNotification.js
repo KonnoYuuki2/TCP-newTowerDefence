@@ -1,3 +1,5 @@
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 import pools from '../DB/dataBase.js';
 import { findHighScoreByUserId, findUserIdByUUID } from '../DB/user/user.db.js';
 import { SQL_QUERIES } from '../DB/user/user.queries.js';
@@ -78,6 +80,6 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
 
     return { packet1, packet2 };
   } catch (error) {
-    console.error(`매칭 패킷 생성 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.PACKET_STRUCTURE_MISMATCH, `매칭 패킷 생성 중 에러 발생`);
   }
 };
