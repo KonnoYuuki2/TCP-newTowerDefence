@@ -61,10 +61,10 @@ export const registerHandler = async ({ socket, payload }) => {
 
     socket.write(result);
   } catch (error) {
-    await handleError(socket, error);
+    console.error(`회원 가입 중 에러 발생`, error);
   }
 };
-      
+
 /**
  * 로그인 요청시 처리 함수
  * @param {socket, Object}
@@ -130,7 +130,7 @@ export const loginHandler = async ({ socket, payload }) => {
 
     socket.write(result);
   } catch (error) {
-    await handleError(socket, error);
+    console.error(`로그인 중 에러 발생`, error);
   }
 };
 
