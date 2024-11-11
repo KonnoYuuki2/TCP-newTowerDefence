@@ -71,5 +71,5 @@ export const findUserIdByUUID = async (socketId) => {
 export const findHighScoreByUserId = async (userId) => {
   const highScore = await pools.USER_DATABASE_SQL.query(SQL_QUERIES.FIND_HIGHSCORE_BY_ID, [userId]);
 
-  return highScore[0][0].score;
+  return highScore[0][0] ? highScore[0][0].score : 0;
 };

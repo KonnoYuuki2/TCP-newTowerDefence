@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import protobuf from 'protobufjs';
 import packetNames from '../protobuf/packetsName.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);

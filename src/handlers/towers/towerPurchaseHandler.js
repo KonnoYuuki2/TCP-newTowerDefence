@@ -24,6 +24,8 @@ export const towerPurchaseHandler = async ({ socket, payload }) => {
 
     await hostSocketWrite(socket, PacketType.TOWER_PURCHASE_RESPONSE, hostPacket);
     await oppoSocketWrite(socket, PacketType.ADD_ENEMY_TOWER_NOTIFICATION, oppoPacket);
+    const buffer = await stateSyncNotification(socket);
+    socket.write(buffer);
   } catch (error) {
     await handleError(socket, error);
   }

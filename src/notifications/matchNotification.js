@@ -33,12 +33,12 @@ export const createUserData = async (hostSocketId, oppoSocketId) => {
     const playerData = createInitialPlayerData(
       initialGameState,
       createInitialTowers(3),
-      hostHighScore ? hostHighScore : 0,
+      hostHighScore,
     );
     const opponentData = createInitialPlayerData(
       initialGameState,
       createInitialTowers(3, 100000),
-      oppoHighScore ? oppoHighScore : 0,
+      oppoHighScore,
     );
 
     const packet1 = {
