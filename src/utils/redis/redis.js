@@ -191,6 +191,7 @@ export const redis = {
   addToMatchQueue: async (player) => {
     try {
       await redisClient.rpush(MATCH_PREFIX, JSON.stringify(player));
+      await redisClient.expire(MATCH_PREFIX, 600);
     } catch (error) {
       throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `매치 큐에 유저 추가 중 에러 발생`);
     }
