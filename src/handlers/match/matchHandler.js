@@ -60,7 +60,8 @@ export const matchRequestHandler = async ({ socket, payload }) => {
       }
 
       // 대기열에서 2명 제거
-      await redis.removeFromMatchQueue(2);
+      await redis.removeMatchQueueUser(1, player1);
+      await redis.removeMatchQueueUser(1, player2);
     }
   } catch (error) {
     await handleError(socket, error);

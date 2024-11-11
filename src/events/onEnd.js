@@ -5,6 +5,8 @@ const onEnd = (socket) => async (data) => {
     // 일단 아이디만 삭제
     await redis.removeUser(socket.gameId, socket.id);
 
+    await redis.removeMatchQueueUser(1, { id: socket.id });
+
     setTimeout(async () => {
       // 게임 세션 및 유저 데이터 삭제
       try {
