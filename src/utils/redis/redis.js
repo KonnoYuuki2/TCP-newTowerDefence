@@ -211,7 +211,20 @@ export const redis = {
   },
 
   /**
-   * 매치 큐에서 유저 삭제
+   * 매치 큐의 유저 삭제
+   * @param {Number} count
+   * @param {Object} player
+   */
+  removeMatchQueueUser: async (count, player) => {
+    try {
+      await redisClient.lrem(MATCH_PREFIX, count, JSON.stringify(player));
+    } catch (error) {
+      throw new CustomError(ErrorCodes.REDIS_IS_NOT_WORKING, `매치 큐의 유저 삭제 중 에러 발생`);
+    }
+  },
+
+  /**
+   * 매치 큐에서 유저들 삭제
    * @param {Number} count // 삭제할 유저 수
    */
   removeFromMatchQueue: async (count) => {

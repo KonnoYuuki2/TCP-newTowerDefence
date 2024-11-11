@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS accounts
     account_id VARCHAR(16) NOT NULL UNIQUE,
     uuid VARCHAR(36) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    email VARCHAR(16) NOT NULL,
+    email VARCHAR(30) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_uuid (uuid)
 );
