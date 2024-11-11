@@ -6,6 +6,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * filePath로 읽어온 파일들에 대한 query문 실행
+ * @param {pool} pool
+ * @param {filePath} filePath
+ */
 const executeSqlFile = async (pool, filePath) => {
   const sql = fs.readFileSync(filePath, 'utf8');
   const queries = sql
@@ -18,6 +23,9 @@ const executeSqlFile = async (pool, filePath) => {
   }
 };
 
+/**
+ * 데이터베이스 테이블 생성
+ */
 const createSchemas = async () => {
   const sqlDir = path.join(__dirname, '../sql');
   try {

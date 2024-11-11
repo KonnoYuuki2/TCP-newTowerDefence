@@ -1,4 +1,6 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 /**
  * 페이로드 데이터를 디코딩하는 함수
@@ -11,14 +13,15 @@ export const packetParser = (packet) => {
     const message = protoMessages.packets.GamePacket;
 
     let decodedPacket;
-    try {
-      decodedPacket = message.decode(packet);
-    } catch (e) {
-      console.error(e);
-    }
 
-    return decodedPacket;
+    decodedPacket = message.decode(packet);
+
+    const fieldName = Object.keys(decodedPacket)[0];
+
+    const payload = decodedPacket[fieldName];
+
+    return payload;
   } catch (error) {
-    console.error(`패킷 파싱 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, `패킷 파싱 중 에러 발생`);
   }
 };

@@ -1,0 +1,21 @@
+{
+  "name": "monsterLevel",
+  "version": "1.0.0",
+  "data": [
+    { "id": 1, "nextLevel": 100, "score": 10, "reward": 100 },
+    { "id": 2, "nextLevel": 200, "score": 15, "reward": 90 },
+    { "id": 3, "nextLevel": 350, "score": 20, "reward": 80 },
+    { "id": 4, "nextLevel": 500, "score": 25, "reward": 70 },
+    { "id": 5, "nextLevel": 700, "score": 28, "reward": 60 },
+    { "id": 6, "nextLevel": 950, "score": 30, "reward": 50 },
+    { "id": 7, "nextLevel": 1200, "score": 32, "reward": 40 },
+    { "id": 8, "nextLevel": 1500, "score": 33, "reward": 30 },
+    { "id": 9, "nextLevel": 1750, "score": 34, "reward": 20 },
+    { "id": 10, "nextLevel": 2000, "score": 35, "reward": 10 },
+    { "id": 11, "nextLevel": 2500, "score": 36, "reward": 5 },
+    { "id": 12, "nextLevel": 3000, "score": 37, "reward": 5 },
+    { "id": 13, "nextLevel": 3500, "score": 38, "reward": 5 },
+    { "id": 14, "nextLevel": 4000, "score": 39, "reward": 5 },
+    { "id": 15, "nextLevel": 5000, "score": 40, "reward": 5 }
+  ]
+}

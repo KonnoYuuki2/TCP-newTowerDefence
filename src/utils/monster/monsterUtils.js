@@ -1,10 +1,21 @@
 import { UserFields } from '../../constants/constant.js';
+import { getGameAssets } from '../../init/assets.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
+import { calculateUserGold, getUserGold, setUserGold } from '../gameState/gold/goldUtils.js';
+import { getMonsterLevel, setMonsterLevel } from '../gameState/level/levelUtils.js';
+import { calculateScore, getScore, setScore } from '../gameState/score/scoreUtils.js';
 import { redis } from '../redis/redis.js';
 
-// 몬스터데이터 리스트에 새로운 몬스터아이디를 가진 객체를 생성해서 배열에 추가
+/**
+ * 몬스터를 생성하여 저장하는 함수
+ * @param {*} socket
+ * @returns {Object}
+ */
 export const spawnMonster = async (socket) => {
   try {
     let monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
+    const monsterLevel = await getMonsterLevel(socket);
     if (monsterData == null) {
       monsterData = [];
     }
@@ -24,7 +35,7 @@ export const spawnMonster = async (socket) => {
 
     let monsterNumber = Math.floor(Math.random() * 4) + 1;
 
-    const spawnMonster = { monsterId: monsterId, monsterNumber: monsterNumber };
+    const spawnMonster = { monsterId, monsterNumber, monsterLevel };
 
     monsterData.push(spawnMonster);
 
@@ -32,26 +43,54 @@ export const spawnMonster = async (socket) => {
 
     return spawnMonster;
   } catch (error) {
-    console.error(`몬스터 스폰 함수 실행 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.MONSTER_SPAWN_ERROR, `몬스터 생성 중 에러 발생`);
   }
 };
 
-// 몬스터데이터 리스트에서 죽은 몬스터의Id를 찾아서 해당 아이디를 가진 몬스터를 제거
+/**
+ * 사망한 몬스터 id를 지우는 함수
+ * @param {*} socket
+ * @param {*} monsterId
+ */
 export const monsterDeath = async (socket, monsterId) => {
   try {
     const monsterData = await redis.getUserField(socket.id, UserFields.MONSTERS);
 
     for (let i = 0; i < monsterData.length; i++) {
       if (monsterData[i].monsterId === monsterId) {
-        console.log(`지우기 전`, monsterData);
         monsterData.splice(i, 1);
-        console.log(`지워진 몬스터 데이터`, monsterData);
         break;
       }
     }
 
     await redis.updateUserField(socket.id, UserFields.MONSTERS, monsterData);
   } catch (error) {
-    console.error(`처치된 몬스터 삭제 중 에러 발생: ${error}`);
+    throw new CustomError(ErrorCodes.MONSTER_NOT_FOUND, `처치된 몬스터 삭제 중 에러 발생`);
+  }
+};
+
+export const monsterDeathUpdateGameState = async (socket) => {
+  try {
+    const { data } = getGameAssets().monsterLevel;
+
+    // 몬스터가 죽었을 떄 레벨에 따라서 스코어 증가 및 갱신
+    const score = await getScore(socket);
+    const monsterLevel = await getMonsterLevel(socket);
+
+    await setScore(socket, await calculateScore(score, monsterLevel));
+
+    const gold = await getUserGold(socket);
+
+    await setUserGold(socket, await calculateUserGold(gold, monsterLevel));
+
+    const increasedScore = await getScore(socket);
+
+    const levelData = data.find((el) => el.id === monsterLevel);
+
+    if (increasedScore >= levelData.nextLevel) {
+      if (levelData.id < 15) await setMonsterLevel(socket, monsterLevel);
+    }
+  } catch (error) {
+    throw new CustomError(ErrorCodes.GAME_STATE_UPDATE_ERROR, `유저 데이터 업데이트 중 에러 발생`);
   }
 };
