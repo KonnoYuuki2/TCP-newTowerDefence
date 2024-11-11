@@ -8,7 +8,6 @@ import { baseHpUpdateHandler } from './base/baseHpUpdateHandler.js';
 import { towerPurchaseHandler } from './towers/towerPurchaseHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
 import CustomError from '../utils/error/customError.js';
-import { handleError } from '../utils/error/errorHandler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -64,6 +63,6 @@ export const handler = async (socket, packetType, payload) => {
 
     await handlerFunction({ socket, payload });
   } catch (error) {
-    await handleError(socket, error);
+    console.error(error.message, error);
   }
 };

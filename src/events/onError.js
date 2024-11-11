@@ -10,7 +10,7 @@ const onError = (socket) => async (error) => {
       } catch (error) {
         console.error(`데이터 삭제 중 에러 발생`, error);
       }
-    }, 2000);
+    }, 1000);
   } catch (error) {
     console.error(`onError 처리 중 에러 발생`, error);
   }

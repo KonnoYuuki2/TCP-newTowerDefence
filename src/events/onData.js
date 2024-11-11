@@ -5,7 +5,6 @@ import { handler } from '../handlers/index.js';
 import { validateSequence } from '../utils/validate/validateSequence.js';
 import { validateVersion } from '../utils/validate/validateVersion.js';
 import CustomError from '../utils/error/customError.js';
-import { handleError } from '../utils/error/errorHandler.js';
 
 /**
  * 클라이언트로부터 받은 패킷을 처리하는 함수
@@ -43,7 +42,7 @@ const onData = (socket) => async (data) => {
       }
     }
   } catch (error) {
-    await handleError(socket, error);
+    console.error(error.message, error);
   }
 };
 
