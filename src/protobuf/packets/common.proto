@@ -1,0 +1,12 @@
+syntax= "proto3";
+
+package common;
+
+message CommonPacket {
+    ushort packetType = 1;
+    ubyte versionLength = 2;
+    string version = 3;
+    uint32 sequence = 4;
+    uint32 payloadLength = 5;
+    bytes payload = 6;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "gameState",
+  "version": "1.0.0",
+  "data": {
+    "userGold": 1000,
+    "baseHp": 100,
+    "towerCost": 1000,
+    "initialGold": 1000,
+    "monsterSpawnInterval": 2000,
+    "monsterLevel": 1,
+    "score": 0,
+    "basePosition": { "x": 1425, "y": 300 }
+  }
+}
